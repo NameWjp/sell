@@ -1,0 +1,75 @@
+// cover some element-ui styles
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+
+// to fixed https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// tree选择颜色
+.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: #a0cfff !important;
+  transition:all .3s;
+}
+
+.el-date-editor .el-range-separator {
+  box-sizing: content-box;
+}
+
+.el-table .cell {
+  text-align: center;
+}
+
+
+// element单选框和输入框的高度不一致bug
+.el-form-item--small .el-form-item__content, .el-form-item--small .el-form-item__label {
+  line-height: 33px !important;
+}
+
+// 解决表格线错位
+.el-table th.gutter {
+  display: table-cell!important;
+}
+
+// 禁用颜色
+.el-input.is-disabled .el-input__inner {
+  color: #909399 !important;
+}
+
+.el-textarea.is-disabled .el-textarea__inner {
+  color: #909399 !important;
+}
+
+// 通知消息组件重置
+.message-board.el-popover {
+  padding: 0;
+  // 滚动条组件样式
+  .el-scrollbar__wrap {
+    overflow-x: auto;
+  }
+}

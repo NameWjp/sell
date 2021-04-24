@@ -1,0 +1,153 @@
+@import './variables.scss';
+@import './mixin.scss';
+@import './transition.scss';
+@import './element-ui.scss';
+@import './sidebar.scss';
+
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+// label {
+//   font-weight: 700;
+// }
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+div:focus {
+  outline: none;
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+
+
+$max-height: calc(100vh - 50px - 40px);
+
+// 有tag处理 navbar 50px, tags-view 34px, padding 40px
+.hasTagsView {
+  $max-height: calc(100vh - 50px - 34px - 40px);
+  .directory-layout {
+    min-height: $max-height;
+  }
+  .layout-min-height {
+    min-height: $max-height;
+  }
+}
+
+// 撑满屏幕
+.layout-min-height {
+  min-height: $max-height;
+}
+
+// 左右两侧布局
+.directory-layout {
+  display: flex;
+  min-height: $max-height;
+  .directory {
+    padding: 0 16px 8px 0;
+    border-right: 1px solid #e8e8e8;
+    width: 224px;
+    flex: 0 0 224px;
+  }
+  .main-layout {
+    flex: 1 1;
+    overflow: hidden;
+    padding: 0 16px 8px;
+  }
+}
+
+// 主布局
+.main-layout {
+  .page-control {
+    display: flex;
+    justify-content: flex-end;
+    & > .el-button {
+      margin: 12px 0 20px 0;
+    }
+    & > .el-btn {
+      margin: 12px 0 20px 0;
+    }
+  }
+  .query-form {
+    margin: 20px 0;
+  }
+}
+
+// .el-btn
+.el-btn {
+  display: inline-block;
+}
+.el-btn + .el-btn {
+  margin-left: 10px;
+}
+.el-btn + .el-button {
+  margin-left: 10px;
+}
+.el-button + .el-btn {
+  margin-left: 10px;
+}
+
+// 提交表单按钮居中
+.form-control {
+  text-align: center;
+  margin: 20px 0;
+}
+
+// 下载link
+.link {
+  color: #1890ff;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: #1890ff;
+  }
+  &:visited, &:active, &:link {
+    color: #1890ff;
+  }
+}
+
+
