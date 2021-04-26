@@ -4,6 +4,7 @@ import com.wangjp.sell.dto.CartDTO;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -29,6 +30,6 @@ public class OrderCreateForm {
     @NotBlank(message = "openid不能为空")
     private String openid;
 
-    @NotBlank(message = "购物车不能为空")
+    @NotNull(message = "购物车不能为空")
     private List<CartDTO> cartList;
 }
