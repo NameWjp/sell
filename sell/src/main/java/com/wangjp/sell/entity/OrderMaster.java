@@ -25,7 +25,7 @@ public class OrderMaster {
 
     // 订单id
     @Id
-    private String orderId;
+    private String id;
 
     // 买家名称
     private String buyerName;
@@ -42,10 +42,10 @@ public class OrderMaster {
     // 订单总金额
     private BigDecimal orderAmount;
 
-    // 订单状态: 0新下单 1完结 2已取消
+    // 订单状态
     private Integer orderStatus = OrderStatusEnum.NEW.getCode();
 
-    // 支付状态: 0待支付 1支付成功
+    // 支付状态
     private Integer payStatus = PayStatusEnum.WAIT.getCode();
 
     // 创建时间

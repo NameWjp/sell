@@ -1,10 +1,11 @@
 package com.wangjp.sell.controller;
 
-import com.wangjp.sell.converter.OrderForm2OrderDTOConverter;
+import com.wangjp.sell.converter.OrderCreateForm2OrderDTOConverter;
+import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.dto.OrderDTO;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
-import com.wangjp.sell.form.OrderForm;
+import com.wangjp.sell.form.OrderCreateForm;
 import com.wangjp.sell.service.OrderService;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.vo.ResultVO;
@@ -13,13 +14,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author wangjp
@@ -38,15 +37,16 @@ public class BuyerOrderController {
 
     @ApiOperation("创建订单")
     @PostMapping("/create")
-    public ResultVO<Map<String, String>> create(@RequestBody @Validated OrderForm orderForm) {
-        OrderDTO orderDTO = OrderForm2OrderDTOConverter.convert(orderForm);
-        if (CollectionUtils.isEmpty(orderDTO.getOrderDetailList())) {
+    public ResultVO<Map<String, String>> create(@RequestBody @Validated OrderCreateForm createForm) {
+        if (CollectionUtils.isEmpty(createForm.getCartList())) {
             log.error("【创建订单】购物车不能为空");
             throw new SellException(ResultEnum.CART_EMPTY);
         }
-        OrderDTO createResult = orderService.create(orderDTO);
+
+        OrderDTO<CartDTO> orderDTO = OrderCreateForm2OrderDTOConverter.convert(createForm);
+        OrderDTO<CartDTO> createResult = orderService.create(orderDTO);
         Map<String, String> map = new HashMap<>();
-        map.put("orderId", createResult.getOrderId());
+        map.put("orderId", createResult.getId());
 
         return ResultVOUtil.success(map);
     }

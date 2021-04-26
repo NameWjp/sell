@@ -1,6 +1,5 @@
 package com.wangjp.sell.dto;
 
-import com.wangjp.sell.entity.OrderDetail;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,10 +15,10 @@ import java.util.List;
  * @detail 数据传输对象 dto，用于 service 传输数据
  */
 @Data
-public class OrderDTO {
+public class OrderDTO<T> {
 
     // 订单id
-    private String orderId;
+    private String id;
 
     // 买家名称
     private String buyerName;
@@ -36,10 +35,10 @@ public class OrderDTO {
     // 订单总金额
     private BigDecimal orderAmount;
 
-    // 订单状态: 0新下单 1完结 2已取消
+    // 订单状态
     private Integer orderStatus;
 
-    // 支付状态: 0待支付 1支付成功
+    // 支付状态
     private Integer payStatus;
 
     // 创建时间
@@ -50,6 +49,6 @@ public class OrderDTO {
     @LastModifiedDate
     private Date updateTime;
 
-    // 订单详情
-    List<OrderDetail> orderDetailList;
+    // 详情列表
+    List<T> detailList;
 }

@@ -19,7 +19,7 @@ class OrderMasterRepositoryTest {
     @Test
     public void saveTest() {
         OrderMaster orderMaster = new OrderMaster();
-        orderMaster.setOrderId("456");
+        orderMaster.setId("456");
         orderMaster.setBuyerName("小明");
         orderMaster.setBuyerPhone("123321");
         orderMaster.setBuyerAddress("杭州市西湖区");
@@ -34,6 +34,6 @@ class OrderMasterRepositoryTest {
     public void findByBuyerOpenid() {
         PageRequest request = PageRequest.of(0, 10);
         Page<OrderMaster> result = repository.findByBuyerOpenid("1231232", request);
-        System.out.println(result.getTotalElements());
+        Assertions.assertNotEquals(0, result.getTotalElements());
     }
 }

@@ -18,14 +18,15 @@ class ProductInfoRepositoryTest {
     @Test
     public void saveTest() {
         ProductInfo productInfo = new ProductInfo();
-        productInfo.setProductId("2");
+        productInfo.setId("2");
         productInfo.setProductName("小米粥");
         productInfo.setProductPrice(new BigDecimal("3.2"));
         productInfo.setProductStock(100);
         productInfo.setProductDescription("小米粥超级好喝");
         productInfo.setProductIcon("http://test.png");
         productInfo.setProductStatus(0);
-        productInfo.setCategoryType(4);
+        productInfo.setCategoryCode("4");
+
         repository.save(productInfo);
     }
 

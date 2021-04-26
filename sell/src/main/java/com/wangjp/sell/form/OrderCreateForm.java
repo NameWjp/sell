@@ -1,9 +1,11 @@
 package com.wangjp.sell.form;
 
+import com.wangjp.sell.dto.CartDTO;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
  * @author wangjp
@@ -12,7 +14,7 @@ import javax.validation.constraints.Pattern;
  * @detail
  */
 @Data
-public class OrderForm {
+public class OrderCreateForm {
 
     @NotBlank(message = "姓名不能为空")
     private String name;
@@ -28,5 +30,5 @@ public class OrderForm {
     private String openid;
 
     @NotBlank(message = "购物车不能为空")
-    private String items;
+    private List<CartDTO> cartList;
 }

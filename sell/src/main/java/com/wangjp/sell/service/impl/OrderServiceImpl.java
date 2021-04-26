@@ -1,6 +1,5 @@
 package com.wangjp.sell.service.impl;
 
-import com.wangjp.sell.converter.OrderMaster2OrderDTOConverter;
 import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.dto.OrderDTO;
 import com.wangjp.sell.entity.OrderDetail;
@@ -10,13 +9,16 @@ import com.wangjp.sell.enums.OrderStatusEnum;
 import com.wangjp.sell.enums.PayStatusEnum;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
+import com.wangjp.sell.form.OrderCancelForm;
+import com.wangjp.sell.form.OrderFinishForm;
+import com.wangjp.sell.form.OrderPaidForm;
 import com.wangjp.sell.repository.OrderDetailRepository;
 import com.wangjp.sell.repository.OrderMasterRepository;
 import com.wangjp.sell.service.OrderService;
 import com.wangjp.sell.service.ProductService;
-import com.wangjp.sell.utils.CopyUtil;
 import com.wangjp.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,14 +55,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDTO create(OrderDTO orderDTO) {
+    public OrderDTO<CartDTO> create(OrderDTO<CartDTO> orderDTO) {
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
         String orderId = KeyUtil.genUniqueKey();
 
         // 查询商品的数量，价格
-        for (OrderDetail orderDetail : orderDTO.getOrderDetailList()) {
-            Integer quantity = orderDetail.getProductQuantity();
-            String productId = orderDetail.getProductId();
+        for (CartDTO cartDTO : orderDTO.getDetailList()) {
+            Integer quantity = cartDTO.getProductQuantity();
+            String productId = cartDTO.getProductId();
 
             ProductInfo productInfo = productService.findOne(productId);
             // 判断商品是否存在
@@ -72,32 +74,35 @@ public class OrderServiceImpl implements OrderService {
             orderAmount = orderAmount.add(productInfo.getProductPrice().multiply(new BigDecimal(quantity)));
 
             // 订单详情入库
-            BeanUtils.copyProperties(productInfo, orderDetail, CopyUtil.getIgnoreKey());
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setId(KeyUtil.genUniqueKey());
             orderDetail.setOrderId(orderId);
-            orderDetail.setDetailId(KeyUtil.genUniqueKey());
+            orderDetail.setProductId(productInfo.getId());
+            orderDetail.setProductName(productInfo.getProductName());
+            orderDetail.setProductPrice(productInfo.getProductPrice());
+            orderDetail.setProductQuantity(quantity);
+            orderDetail.setProductIcon(productInfo.getProductIcon());
             orderDetailRepository.save(orderDetail);
         }
 
         // 写入订单数据库
         OrderMaster orderMaster = new OrderMaster();
-        BeanUtils.copyProperties(orderDTO, orderMaster, CopyUtil.getIgnoreKey());
-        orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
-        orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
-        orderMaster.setOrderId(orderId);
+        orderMaster.setId(orderId);
+        orderMaster.setBuyerName(orderDTO.getBuyerName());
+        orderMaster.setBuyerPhone(orderDTO.getBuyerPhone());
+        orderMaster.setBuyerAddress(orderDTO.getBuyerAddress());
+        orderMaster.setBuyerOpenid(orderDTO.getBuyerOpenid());
         orderMaster.setOrderAmount(orderAmount);
         orderMasterRepository.save(orderMaster);
 
         // 扣库存
-        List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream().map(e ->
-                new CartDTO(e.getProductId(), e.getProductQuantity())
-        ).collect(Collectors.toList());
-        productService.decreaseStock(cartDTOList);
+        productService.decreaseStock(orderDTO.getDetailList());
 
         return orderDTO;
     }
 
     @Override
-    public OrderDTO findOne(String orderId) {
+    public OrderDTO<OrderDetail> findOne(String orderId) {
         OrderMaster orderMaster = orderMasterRepository.findById(orderId).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
@@ -108,33 +113,32 @@ public class OrderServiceImpl implements OrderService {
             throw new SellException(ResultEnum.ORDER_DETAIL_NOT_EXIST);
         }
 
-        OrderDTO orderDTO = new OrderDTO();
+        OrderDTO<OrderDetail> orderDTO = new OrderDTO<>();
         BeanUtils.copyProperties(orderMaster, orderDTO);
-        orderDTO.setOrderDetailList(orderDetailList);
+        orderDTO.setDetailList(orderDetailList);
 
         return orderDTO;
     }
 
     @Override
-    public Page<OrderDTO> findList(String buyerOpenid, Pageable pageable) {
+    public Page<OrderMaster> findList(String buyerOpenid, Pageable pageable) {
         Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
-        List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
-        return new PageImpl<>(orderDTOList, pageable, orderMasterPage.getTotalElements());
+        return new PageImpl<>(orderMasterPage.getContent(), pageable, orderMasterPage.getTotalElements());
     }
 
     @Override
     @Transactional
-    public OrderMaster cancel(OrderDTO orderDTO) {
+    public OrderMaster cancel(OrderCancelForm cancelForm) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(orderDTO.getOrderId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(cancelForm.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
-        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderMaster.getOrderId());
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderMaster.getId());
 
         // 判断订单状态
         if (!orderMaster.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
-            log.error("【取消订单】订单状态不正确，orderId={}, orderStatus={}", orderMaster.getOrderId(), orderMaster.getOrderStatus());
+            log.error("【取消订单】订单状态不正确，orderId={}, orderStatus={}", orderMaster.getId(), orderMaster.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
 
@@ -152,23 +156,23 @@ public class OrderServiceImpl implements OrderService {
 
         // 如果已支付，需要退款
         if (orderMaster.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
-            // TODO
+            // TODO 处理退款逻辑
         }
         return orderMaster;
     }
 
     @Override
     @Transactional
-    public OrderMaster finish(OrderDTO orderDTO) {
+    public OrderMaster finish(OrderFinishForm finishForm) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(orderDTO.getOrderId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(finishForm.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
 
         // 判断订单状态
         if (!orderMaster.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
-            log.error("【完结订单】订单状态不正确，orderId={}, orderStatus={}", orderMaster.getOrderId(), orderMaster.getOrderStatus());
+            log.error("【完结订单】订单状态不正确，orderId={}, orderStatus={}", orderMaster.getId(), orderMaster.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
 
@@ -180,22 +184,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderMaster paid(OrderDTO orderDTO) {
+    public OrderMaster paid(OrderPaidForm paidForm) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(orderDTO.getOrderId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(paidForm.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
 
         // 判断订单状态
         if (!orderMaster.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
-            log.error("【订单支付】订单状态不正确，orderId={}, orderStatus={}", orderMaster.getOrderId(), orderMaster.getOrderStatus());
+            log.error("【订单支付】订单状态不正确，orderId={}, orderStatus={}", orderMaster.getId(), orderMaster.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
 
         // 判断支付状态
         if (!orderMaster.getPayStatus().equals(PayStatusEnum.WAIT.getCode())) {
-            log.error("【订单支付】订单支付状态不正确，orderId={}, orderStatus={}", orderMaster.getOrderId(), orderMaster.getOrderStatus());
+            log.error("【订单支付】订单支付状态不正确，orderId={}, orderStatus={}", orderMaster.getId(), orderMaster.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_PAY_STATUS_ERROR);
         }
 

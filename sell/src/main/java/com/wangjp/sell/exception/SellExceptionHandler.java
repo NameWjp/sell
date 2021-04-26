@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author wangjp
  * @email 943375372@qq.com
  * @date 2021/4/24 6:52 下午
- * @detail
+ * @detail controller 全局异常捕获
  */
 @Slf4j
 @RestControllerAdvice

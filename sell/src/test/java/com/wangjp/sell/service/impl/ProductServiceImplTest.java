@@ -20,7 +20,7 @@ class ProductServiceImplTest {
     @Test
     void findOne() {
         ProductInfo productInfo = productService.findOne("1");
-        Assertions.assertEquals("1", productInfo.getProductId());
+        Assertions.assertEquals("1", productInfo.getId());
     }
 
     @Test
@@ -39,14 +39,14 @@ class ProductServiceImplTest {
     @Test
     void save() {
         ProductInfo productInfo = new ProductInfo();
-        productInfo.setProductId("3");
+        productInfo.setId("3");
         productInfo.setProductName("南瓜粥");
         productInfo.setProductPrice(new BigDecimal("3.2"));
         productInfo.setProductStock(100);
         productInfo.setProductDescription("南瓜粥超级好喝");
         productInfo.setProductIcon("http://test.png");
         productInfo.setProductStatus(0);
-        productInfo.setCategoryType(4);
+        productInfo.setCategoryCode("4");
         ProductInfo result = productService.save(productInfo);
         Assertions.assertNotNull(result);
     }

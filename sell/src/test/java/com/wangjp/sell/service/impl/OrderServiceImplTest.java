@@ -1,10 +1,14 @@
 package com.wangjp.sell.service.impl;
 
+import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.dto.OrderDTO;
 import com.wangjp.sell.entity.OrderDetail;
 import com.wangjp.sell.entity.OrderMaster;
 import com.wangjp.sell.enums.OrderStatusEnum;
 import com.wangjp.sell.enums.PayStatusEnum;
+import com.wangjp.sell.form.OrderCancelForm;
+import com.wangjp.sell.form.OrderFinishForm;
+import com.wangjp.sell.form.OrderPaidForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,30 +33,27 @@ class OrderServiceImplTest {
 
     @Test
     void create() {
-        OrderDTO orderDTO = new OrderDTO();
+        OrderDTO<CartDTO> orderDTO = new OrderDTO<>();
         orderDTO.setBuyerName("林俊杰");
         orderDTO.setBuyerAddress("杭州市西湖区三墩镇");
         orderDTO.setBuyerPhone("15555555555");
         orderDTO.setBuyerOpenid(BUYER_OPENID);
 
         // 购物车
-        List<OrderDetail> orderDetailList = new ArrayList<>();
+        List<CartDTO> cartDTOList = new ArrayList<>();
+        CartDTO o1 = new CartDTO("1", 3);
+        cartDTOList.add(o1);
 
-        OrderDetail o1 = new OrderDetail();
-        o1.setProductId("1");
-        o1.setProductQuantity(3);
+        orderDTO.setDetailList(cartDTOList);
 
-        orderDetailList.add(o1);
-
-        orderDTO.setOrderDetailList(orderDetailList);
-        OrderDTO result = orderService.create(orderDTO);
+        OrderDTO<CartDTO> result = orderService.create(orderDTO);
         log.info("【创建订单成功】 result={}", result);
         Assertions.assertNotNull(result);
     }
 
     @Test
     void findOne() {
-        OrderDTO result = orderService.findOne(ORDER_ID);
+        OrderDTO<OrderDetail> result = orderService.findOne(ORDER_ID);
         log.info("【查询单个订单】result={}", result);
         Assertions.assertNotNull(result);
     }
@@ -60,30 +61,30 @@ class OrderServiceImplTest {
     @Test
     void findList() {
         PageRequest request = PageRequest.of(0, 10);
-        Page<OrderDTO> orderDTOPage = orderService.findList(BUYER_OPENID, request);
+        Page<OrderMaster> orderDTOPage = orderService.findList(BUYER_OPENID, request);
         Assertions.assertNotEquals(0, orderDTOPage.getTotalElements());
     }
 
     @Test
     void cancel() {
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(ORDER_ID);
-        OrderMaster result = orderService.cancel(orderDTO);
+        OrderCancelForm cancelForm = new OrderCancelForm();
+        cancelForm.setId(ORDER_ID);
+        OrderMaster result = orderService.cancel(cancelForm);
         Assertions.assertEquals(OrderStatusEnum.CANCEL.getCode(), result.getOrderStatus());
     }
 
     @Test
     void finish() {
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(ORDER_ID);
+        OrderFinishForm orderDTO = new OrderFinishForm();
+        orderDTO.setId(ORDER_ID);
         OrderMaster result = orderService.finish(orderDTO);
         Assertions.assertEquals(OrderStatusEnum.FINISHED.getCode(), result.getOrderStatus());
     }
 
     @Test
     void paid() {
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(ORDER_ID);
+        OrderPaidForm orderDTO = new OrderPaidForm();
+        orderDTO.setId(ORDER_ID);
         OrderMaster result = orderService.paid(orderDTO);
         Assertions.assertEquals(PayStatusEnum.SUCCESS.getCode(), result.getPayStatus());
     }

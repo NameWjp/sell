@@ -19,7 +19,7 @@ class CategoryServiceImplTest {
     @Test
     void findOne() {
         ProductCategory productCategory = categoryService.findOne(1);
-        Assertions.assertEquals(1, productCategory.getCategoryId());
+        Assertions.assertEquals(1, productCategory.getId());
     }
 
     @Test
@@ -29,16 +29,17 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void findByCategoryTypeIn() {
-        List<ProductCategory> productCategoryList = categoryService.findByCategoryTypeIn(Arrays.asList(1, 3, 4));
+    void findByCodeIn() {
+        List<ProductCategory> productCategoryList = categoryService.findByCodeIn(Arrays.asList("1", "3", "4"));
         Assertions.assertNotEquals(0, productCategoryList.size());
     }
 
     @Test
     void save() {
         ProductCategory productCategory = new ProductCategory();
-        productCategory.setCategoryName("小猫最爱");
-        productCategory.setCategoryType(6);
+        productCategory.setName("小猫最爱");
+        productCategory.setCode("6");
+        productCategory.setSort(10);
         ProductCategory result = categoryService.save(productCategory);
         Assertions.assertNotNull(result);
     }

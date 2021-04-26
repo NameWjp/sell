@@ -1,7 +1,12 @@
 package com.wangjp.sell.service;
 
+import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.dto.OrderDTO;
+import com.wangjp.sell.entity.OrderDetail;
 import com.wangjp.sell.entity.OrderMaster;
+import com.wangjp.sell.form.OrderCancelForm;
+import com.wangjp.sell.form.OrderFinishForm;
+import com.wangjp.sell.form.OrderPaidForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,20 +19,20 @@ import org.springframework.data.domain.Pageable;
 public interface OrderService {
 
     // 创建订单
-    OrderDTO create(OrderDTO orderDTO);
+    OrderDTO<CartDTO> create(OrderDTO<CartDTO> orderDTO);
 
     // 查询单个订单
-    OrderDTO findOne(String orderId);
+    OrderDTO<OrderDetail> findOne(String orderId);
 
     // 查询订单列表
-    Page<OrderDTO> findList(String buyerOpenid, Pageable pageable);
+    Page<OrderMaster> findList(String buyerOpenid, Pageable pageable);
 
     // 取消订单
-    OrderMaster cancel(OrderDTO orderDTO);
+    OrderMaster cancel(OrderCancelForm orderDTO);
 
     // 完结订单
-    OrderMaster finish(OrderDTO orderDTO);
+    OrderMaster finish(OrderFinishForm orderDTO);
 
     // 支付订单
-    OrderMaster paid(OrderDTO orderDTO);
+    OrderMaster paid(OrderPaidForm orderDTO);
 }

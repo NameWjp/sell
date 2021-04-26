@@ -25,7 +25,7 @@ public class ProductInfo {
 
     // 商品id
     @Id
-    private String productId;
+    private String id;
 
     // 商品名称
     private String productName;
@@ -39,14 +39,14 @@ public class ProductInfo {
     // 描述
     private String productDescription;
 
-    // 状态 0正常 1下架
-    private Integer productStatus;
-
     // 小图
     private String productIcon;
 
+    // 状态
+    private Integer productStatus;
+
     // 类目编号
-    private Integer categoryType;
+    private String categoryCode;
 
     // 创建时间
     @CreatedDate

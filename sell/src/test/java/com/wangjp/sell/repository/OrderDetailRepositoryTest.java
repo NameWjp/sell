@@ -18,7 +18,7 @@ class OrderDetailRepositoryTest {
     @Test
     public void saveTest() {
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setDetailId("456");
+        orderDetail.setId("456");
         orderDetail.setOrderId("123");
         orderDetail.setProductIcon("http://xxx.jpg");
         orderDetail.setProductId("123");
@@ -33,6 +33,6 @@ class OrderDetailRepositoryTest {
     @Test
     public void findByOrderId() {
         List<OrderDetail> orderDetailList = repository.findByOrderId("123");
-        System.out.println(orderDetailList);
+        Assertions.assertNotEquals(0, orderDetailList.size());
     }
 }

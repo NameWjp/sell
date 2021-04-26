@@ -28,8 +28,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductInfoRepository repository;
 
     @Override
-    public ProductInfo findOne(String productId) {
-        return repository.findById(productId).orElse(null);
+    public ProductInfo findOne(String id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override

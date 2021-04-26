@@ -12,11 +12,15 @@ import java.util.List;
  */
 public interface CategoryService {
 
+    // 查找单个商品类型
     ProductCategory findOne(Integer categoryId);
 
+    // 查找所有商品类型
     List<ProductCategory> findAll();
 
-    List<ProductCategory> findByCategoryTypeIn(List<Integer> categoryTypeList);
+    // 根据商品类型编码 list 查询对应商品类型
+    List<ProductCategory> findByCodeIn(List<String> categoryCodeList);
 
+    // 保存单个商品类型
     ProductCategory save(ProductCategory productCategory);
 }

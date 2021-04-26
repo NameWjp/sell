@@ -44,19 +44,19 @@ public class BuyerProductController {
         List<ProductInfo> productInfoList = productService.findUpAll();
 
         // 查询商品的类目
-        List<Integer> categoryTypeList = productInfoList.stream().map(ProductInfo::getCategoryType).distinct().collect(Collectors.toList());
-        List<ProductCategory> productCategoryList = categoryService.findByCategoryTypeIn(categoryTypeList);
+        List<String> categoryTypeList = productInfoList.stream().map(ProductInfo::getCategoryCode).distinct().collect(Collectors.toList());
+        List<ProductCategory> productCategoryList = categoryService.findByCodeIn(categoryTypeList);
 
         // 数据拼装
         List<ProductVO> productVOList = new ArrayList<>();
         for (ProductCategory productCategory : productCategoryList) {
             ProductVO productVO = new ProductVO();
-            productVO.setCategoryType(productCategory.getCategoryType());
-            productVO.setCategoryName(productCategory.getCategoryName());
+            productVO.setCategoryCode(productCategory.getCode());
+            productVO.setCategoryName(productCategory.getName());
 
             List<ProductInfoVO> productInfoVOList = new ArrayList<>();
             for (ProductInfo productInfo : productInfoList) {
-                if (productCategory.getCategoryType().equals(productInfo.getCategoryType())) {
+                if (productCategory.getCode().equals(productInfo.getCategoryCode())) {
                     ProductInfoVO productInfoVO = new ProductInfoVO();
                     BeanUtils.copyProperties(productInfo, productInfoVO);
                     productInfoVOList.add(productInfoVO);

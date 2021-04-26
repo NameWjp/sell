@@ -23,17 +23,21 @@ public class ProductCategoryRepositoryTest {
     @Test
     public void saveTest() {
         ProductCategory productCategory = new ProductCategory();
-        productCategory.setCategoryName("男士最爱");
-        productCategory.setCategoryType(4);
-        repository.save(productCategory);
+        productCategory.setName("男士最爱");
+        productCategory.setCode("men_love");
+        productCategory.setSort(10);
+
+        ProductCategory result = repository.save(productCategory);
+        Assertions.assertNotNull(result);
     }
 
     @Test
     public void updateTest() {
         ProductCategory productCategory = repository.findById(5).orElse(null);
         if (productCategory != null) {
-            productCategory.setCategoryName("小朋友的最爱");
-            repository.save(productCategory);
+            productCategory.setName("小朋友的最爱");
+            ProductCategory result = repository.save(productCategory);
+            Assertions.assertNotNull(result);
         }
     }
 
@@ -43,9 +47,9 @@ public class ProductCategoryRepositoryTest {
     }
 
     @Test
-    public void findByCategoryTypeInTest() {
-        List<Integer> list = Arrays.asList(1, 3, 4);
-        List<ProductCategory> result = repository.findByCategoryTypeIn(list);
+    public void findByTypeInTest() {
+        List<String> list = Arrays.asList("1", "3", "4");
+        List<ProductCategory> result = repository.findByCodeIn(list);
         Assertions.assertNotEquals(0, result.size());
     }
 }
