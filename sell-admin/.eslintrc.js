@@ -198,5 +198,6 @@ module.exports = {
     }],
     'array-bracket-spacing': [2, 'never'],
     'no-empty': 0,
+    'prefer-const': 0
   }
 }
