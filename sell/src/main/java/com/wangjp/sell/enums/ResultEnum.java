@@ -27,12 +27,12 @@ public enum ResultEnum {
 
     CART_EMPTY(16, "购物车不能为空");
 
-    private Integer status;
+    private Integer code;
 
     private String message;
 
-    ResultEnum(Integer status, String message) {
-        this.status = status;
+    ResultEnum(Integer code, String message) {
+        this.code = code;
         this.message = message;
     }
 }

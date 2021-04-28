@@ -13,7 +13,7 @@ public class ResultVOUtil {
     public static <T> ResultVO<T> success(T object) {
         ResultVO<T> resultVO = new ResultVO<>();
         resultVO.setData(object);
-        resultVO.setStatus(200);
+        resultVO.setCode(200);
         resultVO.setMessage("成功");
         return resultVO;
     }
@@ -24,14 +24,14 @@ public class ResultVOUtil {
 
     public static ResultVO<Object> error(Integer status, String msg) {
         ResultVO<Object> resultVO = new ResultVO<>();
-        resultVO.setStatus(status);
+        resultVO.setCode(status);
         resultVO.setMessage(msg);
         return resultVO;
     }
 
     public static ResultVO<Object> error() {
         ResultVO<Object> resultVO = new ResultVO<>();
-        resultVO.setStatus(500);
+        resultVO.setCode(500);
         resultVO.setMessage("服务器错误");
         return resultVO;
     }

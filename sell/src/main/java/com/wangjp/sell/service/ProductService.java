@@ -16,7 +16,7 @@ import java.util.List;
 public interface ProductService {
 
     // 查询单个商品
-    ProductInfo findOne(String productId);
+    ProductInfo findById(String productId);
 
     // 查询所有在家商品列表
     List<ProductInfo> findUpAll();

@@ -37,7 +37,7 @@ public class BuyerProductController {
     @Autowired
     private CategoryService categoryService;
 
-    @ApiOperation("获取所有数据")
+    @ApiOperation("获取所有商品")
     @GetMapping("/list")
     public ResultVO<List<ProductVO>> list() {
         // 查询所有上架的商品

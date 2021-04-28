@@ -9,7 +9,7 @@ import lombok.Data;
  * @detail 显示层对象，用于视图显示。
  * http请求返回的最外层对象，例如:
  * {
- *     "status": 200,
+ *     "code": 200,
  *     "message": "成功",
  *     "data": {}
  * }
@@ -18,7 +18,7 @@ import lombok.Data;
 public class ResultVO<T> {
 
     // 状态码
-    private Integer status;
+    private Integer code;
 
     // 提示信息
     private String message;

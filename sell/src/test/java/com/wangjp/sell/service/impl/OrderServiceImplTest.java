@@ -6,9 +6,7 @@ import com.wangjp.sell.entity.OrderDetail;
 import com.wangjp.sell.entity.OrderMaster;
 import com.wangjp.sell.enums.OrderStatusEnum;
 import com.wangjp.sell.enums.PayStatusEnum;
-import com.wangjp.sell.form.OrderCancelForm;
-import com.wangjp.sell.form.OrderFinishForm;
-import com.wangjp.sell.form.OrderPaidForm;
+import com.wangjp.sell.form.OrderForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -52,8 +50,8 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void findOne() {
-        OrderDTO<OrderDetail> result = orderService.findOne(ORDER_ID);
+    void findById() {
+        OrderDTO<OrderDetail> result = orderService.findById(ORDER_ID);
         log.info("【查询单个订单】result={}", result);
         Assertions.assertNotNull(result);
     }
@@ -67,25 +65,25 @@ class OrderServiceImplTest {
 
     @Test
     void cancel() {
-        OrderCancelForm cancelForm = new OrderCancelForm();
-        cancelForm.setId(ORDER_ID);
-        OrderMaster result = orderService.cancel(cancelForm);
+        OrderForm orderForm = new OrderForm();
+        orderForm.setId(ORDER_ID);
+        OrderMaster result = orderService.cancel(orderForm);
         Assertions.assertEquals(OrderStatusEnum.CANCEL.getCode(), result.getOrderStatus());
     }
 
     @Test
     void finish() {
-        OrderFinishForm orderDTO = new OrderFinishForm();
-        orderDTO.setId(ORDER_ID);
-        OrderMaster result = orderService.finish(orderDTO);
+        OrderForm orderForm = new OrderForm();
+        orderForm.setId(ORDER_ID);
+        OrderMaster result = orderService.finish(orderForm);
         Assertions.assertEquals(OrderStatusEnum.FINISHED.getCode(), result.getOrderStatus());
     }
 
     @Test
     void paid() {
-        OrderPaidForm orderDTO = new OrderPaidForm();
-        orderDTO.setId(ORDER_ID);
-        OrderMaster result = orderService.paid(orderDTO);
+        OrderForm orderForm = new OrderForm();
+        orderForm.setId(ORDER_ID);
+        OrderMaster result = orderService.paid(orderForm);
         Assertions.assertEquals(PayStatusEnum.SUCCESS.getCode(), result.getPayStatus());
     }
 }

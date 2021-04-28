@@ -13,7 +13,7 @@ import java.util.List;
 public interface CategoryService {
 
     // 查找单个商品类型
-    ProductCategory findOne(Integer categoryId);
+    ProductCategory findById(Integer categoryId);
 
     // 查找所有商品类型
     List<ProductCategory> findAll();

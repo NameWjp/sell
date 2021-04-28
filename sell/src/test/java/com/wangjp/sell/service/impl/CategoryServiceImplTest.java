@@ -17,8 +17,8 @@ class CategoryServiceImplTest {
     private CategoryServiceImpl categoryService;
 
     @Test
-    void findOne() {
-        ProductCategory productCategory = categoryService.findOne(1);
+    void findById() {
+        ProductCategory productCategory = categoryService.findById(1);
         Assertions.assertEquals(1, productCategory.getId());
     }
 

@@ -16,7 +16,7 @@ public class ProductCategoryRepositoryTest {
     private ProductCategoryRepository repository;
 
     @Test
-    public void findOneTest() {
+    public void findByIdTest() {
         repository.findById(1).ifPresent(productCategory -> System.out.println(productCategory.toString()));
     }
 

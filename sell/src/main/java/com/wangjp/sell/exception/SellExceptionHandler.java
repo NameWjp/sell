@@ -23,7 +23,7 @@ public class SellExceptionHandler {
     @ExceptionHandler(BindException.class)
     public ResultVO<Object> paramsExceptionHandler(BindException e) {
         log.error("参数效验失败: {}", e.getFieldError());
-        return ResultVOUtil.error(ResultEnum.PARAMS_ERROR.getStatus(), Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
+        return ResultVOUtil.error(ResultEnum.PARAMS_ERROR.getCode(), Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
     }
 
     @ExceptionHandler(SellException.class)

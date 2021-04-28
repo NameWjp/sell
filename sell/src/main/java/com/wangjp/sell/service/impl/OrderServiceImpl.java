@@ -9,16 +9,13 @@ import com.wangjp.sell.enums.OrderStatusEnum;
 import com.wangjp.sell.enums.PayStatusEnum;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
-import com.wangjp.sell.form.OrderCancelForm;
-import com.wangjp.sell.form.OrderFinishForm;
-import com.wangjp.sell.form.OrderPaidForm;
+import com.wangjp.sell.form.OrderForm;
 import com.wangjp.sell.repository.OrderDetailRepository;
 import com.wangjp.sell.repository.OrderMasterRepository;
 import com.wangjp.sell.service.OrderService;
 import com.wangjp.sell.service.ProductService;
 import com.wangjp.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -64,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
             Integer quantity = cartDTO.getProductQuantity();
             String productId = cartDTO.getProductId();
 
-            ProductInfo productInfo = productService.findOne(productId);
+            ProductInfo productInfo = productService.findById(productId);
             // 判断商品是否存在
             if (productInfo == null) {
                 throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
@@ -102,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO<OrderDetail> findOne(String orderId) {
+    public OrderDTO<OrderDetail> findById(String orderId) {
         OrderMaster orderMaster = orderMasterRepository.findById(orderId).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
@@ -128,9 +125,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderMaster cancel(OrderCancelForm cancelForm) {
+    public OrderMaster cancel(OrderForm orderForm) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(cancelForm.getId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(orderForm.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
@@ -163,9 +160,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderMaster finish(OrderFinishForm finishForm) {
+    public OrderMaster finish(OrderForm orderForm) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(finishForm.getId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(orderForm.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
@@ -184,9 +181,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderMaster paid(OrderPaidForm paidForm) {
+    public OrderMaster paid(OrderForm orderForm) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(paidForm.getId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(orderForm.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }

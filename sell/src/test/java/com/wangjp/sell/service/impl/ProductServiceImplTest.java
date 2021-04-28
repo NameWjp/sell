@@ -18,8 +18,8 @@ class ProductServiceImplTest {
     private ProductServiceImpl productService;
 
     @Test
-    void findOne() {
-        ProductInfo productInfo = productService.findOne("1");
+    void findById() {
+        ProductInfo productInfo = productService.findById("1");
         Assertions.assertEquals("1", productInfo.getId());
     }
 
