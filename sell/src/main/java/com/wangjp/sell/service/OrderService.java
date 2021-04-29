@@ -4,7 +4,7 @@ import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.dto.OrderDTO;
 import com.wangjp.sell.entity.OrderDetail;
 import com.wangjp.sell.entity.OrderMaster;
-import com.wangjp.sell.form.OrderForm;
+import com.wangjp.sell.form.OnlyStringIdForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,11 +26,11 @@ public interface OrderService {
     Page<OrderMaster> findList(String buyerOpenid, Pageable pageable);
 
     // 取消订单
-    OrderMaster cancel(OrderForm orderDTO);
+    OrderMaster cancel(OnlyStringIdForm form);
 
     // 完结订单
-    OrderMaster finish(OrderForm orderDTO);
+    OrderMaster finish(OnlyStringIdForm form);
 
     // 支付订单
-    OrderMaster paid(OrderForm orderDTO);
+    OrderMaster paid(OnlyStringIdForm form);
 }

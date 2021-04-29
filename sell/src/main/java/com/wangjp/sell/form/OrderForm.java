@@ -15,7 +15,7 @@ import java.util.List;
  * @detail
  */
 @Data
-public class OrderCreateForm {
+public class OrderForm {
 
     @NotBlank(message = "姓名不能为空")
     private String name;

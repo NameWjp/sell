@@ -5,6 +5,7 @@ import com.wangjp.sell.repository.UserRepository;
 import com.wangjp.sell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,8 +36,9 @@ public class UserServiceImpl implements UserService {
         return repository.save(user);
     }
 
+    @Transactional
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteUsersWithIds(List<Integer> ids) {
+        repository.deleteUsersWithIds(ids);
     }
 }

@@ -18,5 +18,5 @@ public interface UserService {
 
     User save(User user);
 
-    void deleteById(Integer id);
+    void deleteUsersWithIds(List<Integer> ids);
 }

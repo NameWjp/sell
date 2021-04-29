@@ -2,7 +2,7 @@ package com.wangjp.sell.converter;
 
 import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.dto.OrderDTO;
-import com.wangjp.sell.form.OrderCreateForm;
+import com.wangjp.sell.form.OrderForm;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -12,16 +12,16 @@ import lombok.extern.slf4j.Slf4j;
  * @detail
  */
 @Slf4j
-public class OrderCreateForm2OrderDTOConverter {
+public class OrderForm2OrderDTOConverter {
 
-    public static OrderDTO<CartDTO> convert(OrderCreateForm createForm) {
+    public static OrderDTO<CartDTO> convert(OrderForm orderForm) {
         OrderDTO<CartDTO> orderDTO = new OrderDTO<>();
 
-        orderDTO.setBuyerName(createForm.getName());
-        orderDTO.setBuyerPhone(createForm.getPhone());
-        orderDTO.setBuyerAddress(createForm.getAddress());
-        orderDTO.setBuyerOpenid(createForm.getOpenid());
-        orderDTO.setDetailList(createForm.getCartList());
+        orderDTO.setBuyerName(orderForm.getName());
+        orderDTO.setBuyerPhone(orderForm.getPhone());
+        orderDTO.setBuyerAddress(orderForm.getAddress());
+        orderDTO.setBuyerOpenid(orderForm.getOpenid());
+        orderDTO.setDetailList(orderForm.getCartList());
 
         return orderDTO;
     }

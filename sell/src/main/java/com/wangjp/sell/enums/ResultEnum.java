@@ -25,7 +25,11 @@ public enum ResultEnum {
 
     ORDER_PAY_STATUS_ERROR(15, "订单支付状态不正确"),
 
-    CART_EMPTY(16, "购物车不能为空");
+    CART_EMPTY(16, "购物车不能为空"),
+
+    USER_NOT_FIND(17, "未找到用户信息"),
+
+    USER_ID_NOT_EMPTY(18, "用户id不能为空");
 
     private Integer code;
 

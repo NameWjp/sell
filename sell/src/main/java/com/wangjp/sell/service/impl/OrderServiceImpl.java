@@ -9,7 +9,7 @@ import com.wangjp.sell.enums.OrderStatusEnum;
 import com.wangjp.sell.enums.PayStatusEnum;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
-import com.wangjp.sell.form.OrderForm;
+import com.wangjp.sell.form.OnlyStringIdForm;
 import com.wangjp.sell.repository.OrderDetailRepository;
 import com.wangjp.sell.repository.OrderMasterRepository;
 import com.wangjp.sell.service.OrderService;
@@ -125,9 +125,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderMaster cancel(OrderForm orderForm) {
+    public OrderMaster cancel(OnlyStringIdForm form) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(orderForm.getId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(form.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
@@ -160,9 +160,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderMaster finish(OrderForm orderForm) {
+    public OrderMaster finish(OnlyStringIdForm form) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(orderForm.getId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(form.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
@@ -181,9 +181,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderMaster paid(OrderForm orderForm) {
+    public OrderMaster paid(OnlyStringIdForm form) {
         // 判断传入订单 id 是否存在
-        OrderMaster orderMaster = orderMasterRepository.findById(orderForm.getId()).orElse(null);
+        OrderMaster orderMaster = orderMasterRepository.findById(form.getId()).orElse(null);
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }

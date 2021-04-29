@@ -1,11 +1,11 @@
 package com.wangjp.sell.controller;
 
-import com.wangjp.sell.converter.OrderCreateForm2OrderDTOConverter;
+import com.wangjp.sell.converter.OrderForm2OrderDTOConverter;
 import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.dto.OrderDTO;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
-import com.wangjp.sell.form.OrderCreateForm;
+import com.wangjp.sell.form.OrderForm;
 import com.wangjp.sell.service.OrderService;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.vo.ResultVO;
@@ -37,13 +37,13 @@ public class BuyerOrderController {
 
     @ApiOperation("创建订单")
     @PostMapping("/create")
-    public ResultVO<Map<String, String>> create(@RequestBody @Validated OrderCreateForm createForm) {
-        if (CollectionUtils.isEmpty(createForm.getCartList())) {
+    public ResultVO<Map<String, String>> create(@RequestBody @Validated OrderForm orderForm) {
+        if (CollectionUtils.isEmpty(orderForm.getCartList())) {
             log.error("【创建订单】购物车不能为空");
             throw new SellException(ResultEnum.CART_EMPTY);
         }
 
-        OrderDTO<CartDTO> orderDTO = OrderCreateForm2OrderDTOConverter.convert(createForm);
+        OrderDTO<CartDTO> orderDTO = OrderForm2OrderDTOConverter.convert(orderForm);
         OrderDTO<CartDTO> createResult = orderService.create(orderDTO);
         Map<String, String> map = new HashMap<>();
         map.put("orderId", createResult.getId());

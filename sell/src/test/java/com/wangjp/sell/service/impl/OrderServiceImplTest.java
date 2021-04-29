@@ -6,7 +6,7 @@ import com.wangjp.sell.entity.OrderDetail;
 import com.wangjp.sell.entity.OrderMaster;
 import com.wangjp.sell.enums.OrderStatusEnum;
 import com.wangjp.sell.enums.PayStatusEnum;
-import com.wangjp.sell.form.OrderForm;
+import com.wangjp.sell.form.OnlyStringIdForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -65,25 +65,25 @@ class OrderServiceImplTest {
 
     @Test
     void cancel() {
-        OrderForm orderForm = new OrderForm();
-        orderForm.setId(ORDER_ID);
-        OrderMaster result = orderService.cancel(orderForm);
+        OnlyStringIdForm form = new OnlyStringIdForm();
+        form.setId(ORDER_ID);
+        OrderMaster result = orderService.cancel(form);
         Assertions.assertEquals(OrderStatusEnum.CANCEL.getCode(), result.getOrderStatus());
     }
 
     @Test
     void finish() {
-        OrderForm orderForm = new OrderForm();
-        orderForm.setId(ORDER_ID);
-        OrderMaster result = orderService.finish(orderForm);
+        OnlyStringIdForm form = new OnlyStringIdForm();
+        form.setId(ORDER_ID);
+        OrderMaster result = orderService.finish(form);
         Assertions.assertEquals(OrderStatusEnum.FINISHED.getCode(), result.getOrderStatus());
     }
 
     @Test
     void paid() {
-        OrderForm orderForm = new OrderForm();
-        orderForm.setId(ORDER_ID);
-        OrderMaster result = orderService.paid(orderForm);
+        OnlyStringIdForm form = new OnlyStringIdForm();
+        form.setId(ORDER_ID);
+        OrderMaster result = orderService.paid(form);
         Assertions.assertEquals(PayStatusEnum.SUCCESS.getCode(), result.getPayStatus());
     }
 }
