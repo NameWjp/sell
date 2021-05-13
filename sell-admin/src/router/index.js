@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Layout from '@/layout';
 import User from './user';
+import SystemConfig from './system-config';
 
 Vue.use(Router);
 
@@ -63,7 +64,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard', affix: true },
+      meta: { title: '首页', icon: 'dashboard', affix: true },
     }],
   },
   User,
@@ -74,19 +75,7 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  {
-    path: '/test',
-    name: 'Test',
-    component: Layout,
-    redirect: { name: 'TestPage' },
-    meta: { title: '测试', icon: 'setting' },
-    children: [{
-      path: 'test-page',
-      name: 'TestPage',
-      component: () => import('@/views/test'),
-      meta: { title: '测试页面', tagKey: 'Test' },
-    }],
-  },
+  SystemConfig,
   { path: '*', redirect: '/404', hidden: true },
 ];
 

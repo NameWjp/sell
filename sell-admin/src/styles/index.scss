@@ -106,10 +106,12 @@ $max-height: calc(100vh - 50px - 40px);
     display: flex;
     justify-content: flex-end;
     & > .el-button {
-      margin: 12px 0 20px 0;
+      margin-top: 12px;
+      margin-bottom: 20px;
     }
     & > .el-btn {
-      margin: 12px 0 20px 0;
+      margin-top: 12px;
+      margin-bottom: 20px;
     }
   }
   .query-form {

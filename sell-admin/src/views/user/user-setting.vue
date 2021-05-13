@@ -84,7 +84,6 @@
 
 <script>
 import { SL } from '@/utils/form-layout';
-import { editPassword } from '@/api/user';
 
 export default {
   name: 'UserSetting',
@@ -141,12 +140,12 @@ export default {
     },
     handleSubmit() {
       this.$refs.form.validate(async (valid) => {
-        if (!valid) return;
-        const { oldPassword, password } = this.form;
-        const { code } = await editPassword({ oldPassword, newPassword: password });
-        if (code === 200) {
-          this.$message.success('修改成功');
-        }
+        // if (!valid) return;
+        // const { oldPassword, password } = this.form;
+        // const { code } = await editPassword({ oldPassword, newPassword: password });
+        // if (code === 200) {
+        //   this.$message.success('修改成功');
+        // }
       });
     },
   },

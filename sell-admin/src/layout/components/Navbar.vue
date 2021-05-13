@@ -6,7 +6,6 @@
 
     <div class="right-menu">
       <theme-picker />
-      <message-board />
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           {{ name }}
@@ -32,14 +31,12 @@ import { mapGetters } from 'vuex';
 import Breadcrumb from '@/components/Breadcrumb';
 import Hamburger from '@/components/Hamburger';
 import ThemePicker from '@/components/ThemePicker';
-import MessageBoard from '@/components/MessageBoard';
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
     ThemePicker,
-    MessageBoard,
   },
   computed: {
     ...mapGetters([

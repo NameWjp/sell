@@ -2,6 +2,8 @@ package com.wangjp.sell.form;
 
 import com.wangjp.sell.annotation.EnumValueValidator;
 import com.wangjp.sell.enums.IsEnableEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -16,16 +18,12 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UserForm {
 
-    // 用户名称
     @NotBlank(message = "用户名称不能为空")
+    @ApiModelProperty(value = "用户名称")
     private String username;
 
-    // 用户密码
-    @NotBlank(message = "用户密码不能为空")
-    private String password;
-
-    // 是否启用
     @NotNull(message = "是否启用不能为空")
+    @ApiModelProperty(value = "是否启用 1启用2停用")
     @EnumValueValidator(enumClass = IsEnableEnum.class, message = "是否启用不在枚举范围内")
     private Integer isEnable;
 }

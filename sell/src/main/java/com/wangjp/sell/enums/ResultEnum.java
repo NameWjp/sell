@@ -29,7 +29,9 @@ public enum ResultEnum {
 
     USER_NOT_FIND(17, "未找到用户信息"),
 
-    USER_ID_NOT_EMPTY(18, "用户id不能为空");
+    USER_ID_NOT_EMPTY(18, "用户id不能为空"),
+
+    USER_ALREADY_EXIST(19, "用户已存在");
 
     private Integer code;
 

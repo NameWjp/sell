@@ -1,34 +1,25 @@
 <template>
   <section ref="appMain" class="app-main">
-    <div v-if="isInit" class="container">
+    <div class="container">
       <transition name="fade-transform" mode="out-in">
-        <!-- 由于缓存页面数据会造成数据没有及时更新的问题，不需要时可注释掉 keep-alive  -->
-        <keep-alive :include="cachedViews">
-          <router-view :key="key" />
-        </keep-alive>
+        <!-- <keep-alive :include="cachedViews"> -->
+        <router-view :key="key" />
+        <!-- </keep-alive> -->
       </transition>
     </div>
   </section>
 </template>
 
 <script>
-import { mapState } from 'vuex';
 
 export default {
   name: 'AppMain',
   computed: {
-    ...mapState({
-      organizationTree: state => state.organization.organizationTree,
-    }),
     cachedViews() {
       return this.$store.state.tagsView.cachedViews;
     },
     key() {
       return this.$route.path;
-    },
-    // 确保系统需要的公共参数加载完毕
-    isInit() {
-      return this.organizationTree.length;
     },
   },
 };

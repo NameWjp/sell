@@ -1,5 +1,9 @@
 import { post, get } from '@/utils/request';
 
-export function editPassword(data) {
-  return post(`/user/updatePassword/${data.id}`, data);
+export function addUser(data) {
+  return post('/user/create', data);
+}
+
+export function deleteUser(data) {
+  return post('/user/delete', data);
 }

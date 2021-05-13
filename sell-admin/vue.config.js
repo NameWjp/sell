@@ -27,8 +27,7 @@ module.exports = {
   lintOnSave: devMode,
   productionSourceMap: false,
   devServer: {
-    // 使用webpack热替换后，vue-router的keep-alive include=cachedViews会导致页面部分内容消失
-    hot: false,
+    hot: true,
     port: port,
     open: false,
     overlay: {

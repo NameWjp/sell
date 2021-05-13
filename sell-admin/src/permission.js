@@ -36,9 +36,6 @@ router.beforeEach(async (to, from, next) => {
           // const { roles } = await store.dispatch('user/getInfo');
 
           // if (roles.length) {
-          //   // 加载公共数据
-          //   store.dispatch('organization/loadOrganizationTree', true);
-
           //   // generate accessible routes map based on roles
           //   const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
 

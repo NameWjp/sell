@@ -23,7 +23,7 @@ const state = {
   name: 'test',
   roles: [],
   userInfo: {
-    privilegeList: [{ url: '/test' }, { url: '/test/test-page' }],
+    privilegeList: [{ url: '/system-config' }, { url: '/system-config/account-manage' }],
   },
   menuTree: [
     {
@@ -33,15 +33,15 @@ const state = {
       code: '/dashboard',
     },
     {
-      name: '测试',
+      name: '系统配置',
       icon: 'setting',
-      url: '/test',
-      code: '/test',
+      url: '/system-config',
+      code: 'system-config',
       children: [
         {
-          name: '测试页面1',
-          url: '/test/test-page',
-          code: '/test/test-page',
+          name: '账户管理',
+          url: '/system-config/account-manage',
+          code: 'system-config-account-manage',
         },
       ],
     },

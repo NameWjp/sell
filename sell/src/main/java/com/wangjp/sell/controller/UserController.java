@@ -1,5 +1,6 @@
 package com.wangjp.sell.controller;
 
+import com.wangjp.sell.constant.UserConstant;
 import com.wangjp.sell.entity.User;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
@@ -36,28 +37,32 @@ public class UserController {
 
     @ApiOperation("创建用户")
     @PostMapping("/create")
-    public ResultVO<User> create(@RequestBody @Validated UserForm userForm) {
+    public ResultVO<Object> create(@RequestBody @Validated UserForm userForm) {
+        User preUser = userService.findByUsername(userForm.getUsername());
+        if (preUser != null) {
+            log.error("【新增用户】用户已存在，id={}，username={}", preUser.getId(), preUser.getUsername());
+            throw new SellException(ResultEnum.USER_ALREADY_EXIST);
+        }
         User user = new User();
         user.setUsername(userForm.getUsername());
-        user.setPassword(userForm.getPassword());
+        user.setPassword(UserConstant.defaultPassword);
         user.setIsEnable(userForm.getIsEnable());
-        User result = userService.save(user);
-        return ResultVOUtil.success(result);
+        userService.save(user);
+        return ResultVOUtil.success();
     }
 
     @ApiOperation("修改用户")
     @PostMapping("/update/{id}")
-    public ResultVO<User> update(@PathVariable("id") Integer id, @RequestBody @Validated(Update.class) UserForm userForm) {
+    public ResultVO<Object> update(@PathVariable("id") Integer id, @RequestBody @Validated(Update.class) UserForm userForm) {
         User user = userService.findById(id);
         if (user == null) {
             log.error("【修改用户】未找到用户信息，id={}", id);
             throw new SellException(ResultEnum.USER_NOT_FIND);
         }
         user.setUsername(userForm.getUsername());
-        user.setPassword(userForm.getPassword());
         user.setIsEnable(userForm.getIsEnable());
-        User result = userService.save(user);
-        return ResultVOUtil.success(result);
+        userService.save(user);
+        return ResultVOUtil.success();
     }
 
     @ApiOperation("删除用户")

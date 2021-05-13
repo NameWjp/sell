@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { validateUsername } from '@/utils/validate';
+import { validateUsername } from '@/utils/validator';
 import { title } from '@/settings';
 
 export default {

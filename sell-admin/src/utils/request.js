@@ -50,9 +50,9 @@ function showResponseError(response) {
     return;
   }
 
-  switch (response.status) {
+  switch (response.code) {
     case 200:
-      if (data.status !== 200 && (data.message || data.msg)) {
+      if (data.code !== 200 && (data.message || data.msg)) {
         msg = data.message || data.msg;
       }
       break;
@@ -106,11 +106,11 @@ instance.interceptors.request.use((config) => {
 // 响应拦截
 instance.interceptors.response.use(async (response) => {
   const { data = {} } = response;
-  const { status = 200, message = '用户未登录' } = data;
-  if (status !== 200 && status !== 401) {
+  const { code = 200, message = '用户未登录' } = data;
+  if (code !== 200 && code !== 401) {
     showResponseError(response);
   }
-  if (status === 401) {
+  if (code === 401) {
     await store.dispatch('user/resetToken');
     router.push(`/login?redirect=${router.currentRoute.fullPath}`);
     Message.warning(message);

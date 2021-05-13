@@ -7,4 +7,5 @@ package com.wangjp.sell.constant;
  * @detail
  */
 public class UserConstant {
+    public static String defaultPassword = "123456";
 }
