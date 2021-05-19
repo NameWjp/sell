@@ -1,15 +1,13 @@
 package com.wangjp.sell.entity;
 
+import com.wangjp.sell.entity.base.AbstractAuditModel;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author wangjp
@@ -19,9 +17,11 @@ import java.util.Date;
  */
 @Entity
 @Data
-// 开启 jpa 审计功能（用于自动添加时间等）
-@EntityListeners(AuditingEntityListener.class)
-public class OrderDetail {
+// 用自己的属性和从父类继承的属性 来生成 hashcode
+@EqualsAndHashCode(callSuper = true)
+// 用自己的属性和从父类继承的属性 来生成 string
+@ToString(callSuper = true)
+public class OrderDetail extends AbstractAuditModel {
 
     // 订单详情id
     @Id
@@ -44,12 +44,4 @@ public class OrderDetail {
 
     // 商品小图
     private String productIcon;
-
-    // 创建时间
-    @CreatedDate
-    private Date createTime;
-
-    // 修改时间
-    @LastModifiedDate
-    private Date updateTime;
 }

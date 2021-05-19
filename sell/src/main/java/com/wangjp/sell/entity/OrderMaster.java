@@ -1,15 +1,14 @@
 package com.wangjp.sell.entity;
 
+import com.wangjp.sell.entity.base.AbstractAuditModel;
 import com.wangjp.sell.enums.OrderStatusEnum;
 import com.wangjp.sell.enums.PayStatusEnum;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author wangjp
@@ -19,9 +18,9 @@ import java.util.Date;
  */
 @Entity
 @Data
-// 开启 jpa 审计功能（用于自动添加时间等）
-@EntityListeners(AuditingEntityListener.class)
-public class OrderMaster {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class OrderMaster extends AbstractAuditModel {
 
     // 订单id
     @Id
@@ -47,12 +46,4 @@ public class OrderMaster {
 
     // 支付状态
     private Integer payStatus = PayStatusEnum.WAIT.getCode();
-
-    // 创建时间
-    @CreatedDate
-    private Date createTime;
-
-    // 修改时间
-    @LastModifiedDate
-    private Date updateTime;
 }

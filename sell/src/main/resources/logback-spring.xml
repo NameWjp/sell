@@ -29,7 +29,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置日志命名模式-->
             <fileNamePattern>
-                /Users/wangjp/Desktop/sell/sell/log/info.%d.log
+                logs/info.%d.log
             </fileNamePattern>
             <!--最多保留30天log-->
             <maxHistory>30</maxHistory>
@@ -52,7 +52,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置日志命名模式-->
             <fileNamePattern>
-                /Users/wangjp/Desktop/sell/sell/log/error.%d.log
+                logs/error.%d.log
             </fileNamePattern>
             <!--最多保留30天log-->
             <maxHistory>30</maxHistory>
