@@ -2,10 +2,10 @@
   <div class="main-layout">
     <my-form ref="form" type="submit" :model="submitForm" :rules="submitRules">
       <my-form-item label="用户名" prop="username">
-        <el-input v-model="submitForm.username" />
+        <el-input v-model="submitForm.username" :disabled="isView" />
       </my-form-item>
       <my-form-item label="是否启用" prop="isEnable">
-        <el-select v-model="submitForm.isEnable" style="width: 100%">
+        <el-select v-model="submitForm.isEnable" :disabled="isView" style="width: 100%">
           <el-option label="启用" :value="1" />
           <el-option label="停用" :value="2" />
         </el-select>
@@ -22,13 +22,14 @@
 import { MyForm, MyFormItem } from '@/components/MyForm';
 import LoadingBtn from '@/components/LoadingBtn';
 import { validateUsername } from '@/utils/validator';
-import { addUser } from '@/api/user';
+import { addUser, getUserInfoById, editUser } from '@/api/user';
 
 export default {
   name: 'AccountManageEdit',
   data() {
     return {
       type: this.$route.query.type,
+      id: this.$route.query.id,
       submitForm: {
         isEnable: 1,
       },
@@ -54,7 +55,19 @@ export default {
       return this.type === 'view';
     },
   },
+  mounted() {
+    if (this.isEdit || this.isView) {
+      this.getDetail();
+    }
+  },
   methods: {
+    async getDetail() {
+      const { data } = await getUserInfoById({ id: this.id });
+      this.submitForm = {
+        ...this.submitForm,
+        ...data,
+      };
+    },
     handleBack() {
       this.$router.push({
         name: 'AccountManage',
@@ -64,7 +77,18 @@ export default {
       const valid = this.$refs.form.validate();
       if (!valid) return;
 
-      const { code } = await addUser(this.submitForm);
+      let code;
+      const data = {
+        ...this.submitForm,
+      };
+      if (this.isAdd) {
+        ({ code } = await addUser(data));
+      }
+      if (this.isEdit) {
+        data.id = this.id;
+        ({ code } = await editUser(data));
+      }
+
       if (code === 200) {
         this.$message.success(`${this.isAdd ? '新增' : this.isEdit ? '修改' : '操作'}成功`);
         this.handleBack();

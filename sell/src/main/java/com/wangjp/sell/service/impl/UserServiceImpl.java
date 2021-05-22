@@ -4,6 +4,9 @@ import com.wangjp.sell.entity.User;
 import com.wangjp.sell.repository.UserRepository;
 import com.wangjp.sell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +35,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return repository.findAll();
+    public Page<User> findAll(Specification<User> specification, Pageable pageable) {
+        return repository.findAll(specification, pageable);
     }
 
     @Override

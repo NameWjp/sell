@@ -1,6 +1,9 @@
 package com.wangjp.sell.service;
 
 import com.wangjp.sell.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -16,7 +19,7 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    List<User> findAll();
+    Page<User> findAll(Specification<User> specification, Pageable pageable);
 
     User save(User user);
 

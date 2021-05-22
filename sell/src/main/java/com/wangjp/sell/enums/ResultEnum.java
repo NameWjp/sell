@@ -31,7 +31,11 @@ public enum ResultEnum {
 
     USER_ID_NOT_EMPTY(18, "用户id不能为空"),
 
-    USER_ALREADY_EXIST(19, "用户已存在");
+    USER_ALREADY_EXIST(19, "用户已存在"),
+
+    USERNAME_ALREADY_EXIST(20, "用户名称已存在"),
+
+    ;
 
     private Integer code;
 
