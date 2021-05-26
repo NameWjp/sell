@@ -7,4 +7,9 @@ package com.wangjp.sell.constant;
  * @detail
  */
 public class DictConstant {
+
+    public static Integer rootParentId = 0;
+
+    // 子树展示前两级
+    public static Integer subTreeShowLevel = 2;
 }

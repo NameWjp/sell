@@ -35,6 +35,10 @@ public enum ResultEnum {
 
     USERNAME_ALREADY_EXIST(20, "用户名称已存在"),
 
+    DICT_NOT_EXIST(21, "字典不存在"),
+
+    DICT_VALUE_ALREADY_EXIST(22, "字典值已存在"),
+
     ;
 
     private Integer code;

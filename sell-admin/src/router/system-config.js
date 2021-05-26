@@ -26,5 +26,24 @@ export default {
         activeMenu: '/system-config/account-manage',
       },
     },
+    {
+      path: 'dict-manage',
+      name: 'DictManage',
+      component: () => import('@/views/system-config/dict-manage'),
+      meta: {
+        tagKey: 'DictManage',
+        title: '字典管理',
+      },
+    },
+    {
+      path: 'dict-manage-edit',
+      name: 'DictManageEdit',
+      component: () => import('@/views/system-config/dict-manage/edit'),
+      meta: {
+        tagKey: 'DictManage',
+        title: '字典管理',
+        activeMenu: '/system-config/dict-manage',
+      },
+    },
   ],
 };

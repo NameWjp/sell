@@ -23,7 +23,7 @@ const state = {
   name: 'test',
   roles: [],
   userInfo: {
-    privilegeList: [{ url: '/system-config' }, { url: '/system-config/account-manage' }],
+    privilegeList: [{ url: '/system-config' }, { url: '/system-config/account-manage' }, { url: '/system-config/dict-manage' }],
   },
   menuTree: [
     {
@@ -41,7 +41,10 @@ const state = {
         {
           name: '账户管理',
           url: '/system-config/account-manage',
-          code: 'system-config-account-manage',
+        },
+        {
+          name: '字典管理',
+          url: '/system-config/dict-manage',
         },
       ],
     },
