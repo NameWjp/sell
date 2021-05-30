@@ -71,6 +71,7 @@
             <version>${commons-lang3.version}</version>
         </dependency>
 
+        <!--json解析库-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

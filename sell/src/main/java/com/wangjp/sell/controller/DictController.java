@@ -75,6 +75,8 @@ public class DictController {
     @GetMapping("/getSubTree")
     public ResultVO<Collection<DictTreeNode>> getSubTree() {
         List<DictTreeNode> dictTreeNodeList = Dict2DictTreeNodeConverter.convert(dictService.findAll());
-        return ResultVOUtil.success(TreeUtil.list2Tree(dictTreeNodeList, DictTreeNode.class));
+        Collection<DictTreeNode> tree = TreeUtil.list2Tree(dictTreeNodeList, DictTreeNode.class);
+        Collection<DictTreeNode> result = TreeUtil.getSubTree(tree, DictTreeNode.class, DictConstant.subTreeShowLevel);
+        return ResultVOUtil.success(result);
     }
 }

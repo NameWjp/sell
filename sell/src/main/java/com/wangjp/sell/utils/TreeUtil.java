@@ -1,9 +1,12 @@
 package com.wangjp.sell.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,9 +21,94 @@ import java.util.Set;
 public class TreeUtil {
 
     /**
+     * 获取树前几级
+     * @param collection tree 集合
+     * @param clazz      集合元素类型
+     * @param level      展示层级，从第一级开始
+     * @param <T>        泛型
+     * @return           新的 tree 集合
+     */
+    public static <T> Collection<T> getSubTree(@NotNull Collection<T> collection, @NotNull Class<T> clazz, @NotNull Integer level) {
+        return getSubTree(collection, null, clazz, level);
+    }
+
+    /**
+     * 获取树前几级
+     * @param collection tree 集合
+     * @param children   子节点集合属性名称
+     * @param clazz      集合元素类型
+     * @param level      展示层级
+     * @param <T>        泛型
+     * @return           新的 tree 集合
+     */
+    public static <T> Collection<T> getSubTree(@NotNull Collection<T> collection, String children, @NotNull Class<T> clazz, @NotNull Integer level) {
+        try {
+            if (StringUtils.isEmpty(children)) children = "children";
+
+            // 初始化根节点集合，支持 set 和 list
+            Collection<T> result;
+            if (collection.getClass().isAssignableFrom(Set.class)) {
+                result = new HashSet<>();
+            } else {
+                result = new ArrayList<>();
+            }
+
+            Gson gson = new Gson();
+            for (T c : collection) {
+                result.add(gson.fromJson(gson.toJson(c), clazz));
+            }
+
+            // 获取 children 字段，从当前对象或其父类
+            Field childrenField = getField(clazz, children);
+            childrenField.setAccessible(true);
+
+            setTreeChildrenByLevel(result, childrenField, level, 1);
+
+            childrenField.setAccessible(false);
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
+
+    /**
+     * 获取树前几级
+     * @param collection    树集合
+     * @param childrenField children 字段
+     * @param targetLevel   目标层级
+     * @param currentLevel  当前层级
+     * @param <T>           泛型
+     * @return              新的树集合
+     * @throws IllegalAccessException
+     */
+    public static <T> void setTreeChildrenByLevel(
+            @NotNull Collection<T> collection,
+            @NotNull Field childrenField,
+            @NotNull Integer targetLevel,
+            @NotNull Integer currentLevel
+    ) throws IllegalAccessException {
+        for (T node : collection) {
+            Collection<T> children = (Collection<T>) childrenField.get(node);
+            if (currentLevel.equals(targetLevel)) {
+                if (children.getClass().isAssignableFrom(Set.class)) {
+                    children = new HashSet<>();
+                } else {
+                    children = new ArrayList<>();
+                }
+                childrenField.set(node, children);
+            } else {
+                setTreeChildrenByLevel(children, childrenField, targetLevel, currentLevel + 1);
+            }
+        }
+    }
+
+    /**
      * 集合转树结构
      * @param collection 目标集合
      * @param clazz      集合元素类型
+     * @param <T>        泛型
      * @return           转换后的树结构
      */
     public static <T> Collection<T> list2Tree(@NotNull Collection<T> collection, @NotNull Class<T> clazz) {
@@ -34,6 +122,7 @@ public class TreeUtil {
      * @param parentId   父节点 id 名称
      * @param children   子节点集合属性名称
      * @param clazz      集合元素类型
+     * @param <T>        泛型
      * @return           转换后的树结构
      */
     public static <T> Collection<T> list2Tree(
@@ -106,6 +195,7 @@ public class TreeUtil {
      * @param idField       id 字段
      * @param parentIdField 父节点 id 字段
      * @param childrenField 子节点字段
+     * @param <T>           泛型
      */
     private static <T> void addChild(
             @NotNull T node,
@@ -138,8 +228,8 @@ public class TreeUtil {
 
     /**
      * 判断是否为根节点, 判断方式为: 父节点编号为空或为 0, 则认为是根节点
-     * @param parentId 父节点id
-     * @return 是否为根节点的布尔值
+     * @param parentId  父节点id
+     * @return          是否为根节点的布尔值
      */
     private static boolean isRootNode(Object parentId) {
         boolean flag = false;
@@ -157,7 +247,8 @@ public class TreeUtil {
      * 获取 Field
      * @param clazz 类型
      * @param key   名称
-     * @return Field 对象
+     * @param <T>   泛型
+     * @return      Field 对象
      * @throws NoSuchFieldException
      */
     private static <T> Field getField(Class<T> clazz, String key) throws NoSuchFieldException {
