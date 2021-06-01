@@ -2,6 +2,11 @@ package com.wangjp.sell.repository;
 
 import com.wangjp.sell.entity.Dict;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  * @author wangjp
@@ -9,7 +14,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @date 2021/5/23 12:14 下午
  * @detail 字典映射
  */
-public interface DictRepository extends JpaRepository<Dict, Integer> {
+public interface DictRepository extends JpaRepository<Dict, Integer>, JpaSpecificationExecutor<Dict> {
 
     Dict findByDictValue(String dictValue);
+
+    List<Dict> findByParentId(Integer parentId);
+
+    @Modifying
+    // 告诉 jpa 这是个修改或删除操作，使用了 @Modifying 需要用 @Transactional 注解进行事务隔离 详见：https://www.debugger.wiki/article/html/1555426800335686
+    @Query("delete from Dict where id in ?1")
+    void deleteDictWithIds(List<Integer> ids);
 }

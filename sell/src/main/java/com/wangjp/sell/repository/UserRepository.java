@@ -19,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     User findByUsername(String username);
 
     @Modifying // 告诉 jpa 这是个修改或删除操作，使用了 @Modifying 需要用 @Transactional 注解进行事务隔离 详见：https://www.debugger.wiki/article/html/1555426800335686
-    @Query("delete from User u where u.id in ?1")
+    @Query("delete from User where id in ?1")
     void deleteUsersWithIds(List<Integer> ids);
 }

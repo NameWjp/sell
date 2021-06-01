@@ -1,5 +1,6 @@
 package com.wangjp.sell.form;
 
+import com.wangjp.sell.groups.Update;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -27,5 +28,7 @@ public class DictForm {
     @ApiModelProperty(value = "字典值")
     private String dictValue;
 
+    @NotNull(message = "父节点id不能为空", groups = Update.class)
+    @ApiModelProperty(value = "父节点id")
     private Integer parentId;
 }

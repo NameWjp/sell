@@ -1,6 +1,9 @@
 package com.wangjp.sell.service;
 
 import com.wangjp.sell.entity.Dict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -18,5 +21,11 @@ public interface DictService {
 
     Dict findByDictValue(String dictValue);
 
+    Page<Dict> findAll(Specification<Dict> specification, Pageable pageable);
+
     List<Dict> findAll();
+
+    void deleteDictWithIds(List<Integer> ids);
+
+    List<Dict> findByParentId(Integer parentId);
 }

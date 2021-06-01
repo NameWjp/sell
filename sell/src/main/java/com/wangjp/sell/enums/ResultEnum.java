@@ -39,6 +39,10 @@ public enum ResultEnum {
 
     DICT_VALUE_ALREADY_EXIST(22, "字典值已存在"),
 
+    DICT_ID_NOT_EMPTY(23, "字典id不能为空"),
+
+    DELETE_DICT_EXIST_CHILDREN(24, "删除的字典存在子节点")
+
     ;
 
     private Integer code;

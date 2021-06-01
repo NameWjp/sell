@@ -1,7 +1,7 @@
 <template>
   <div class="directory-layout">
     <div class="directory">
-      <tree-query :tree-request="getSubTree" @click="handleClickTree" />
+      <tree-query ref="tree" :tree-request="getSubTree" @click="handleClickTree" />
     </div>
     <div class="main-layout">
       <div class="page-control">
@@ -13,7 +13,7 @@
           <my-form-item label="字典编号" prop="dictCode">
             <el-input v-model="queryForm.dictCode" />
           </my-form-item>
-          <my-form-item label="字典代码" prop="dictName">
+          <my-form-item label="字典名称" prop="dictName">
             <el-input v-model="queryForm.dictName" />
           </my-form-item>
         </my-form>
@@ -58,7 +58,7 @@
 <script>
 import { MyForm, MyFormItem } from '@/components/MyForm';
 import MyPagination from '@/components/MyPagination';
-import { getSubTree } from '@/api/dict';
+import { getSubTree, getDictList, deleteDict } from '@/api/dict';
 import TreeQuery from '@/views/common/TreeQuery';
 
 export default {
@@ -70,6 +70,7 @@ export default {
       list: [],
       pagination: {},
       selectedRows: [],
+      selectedNode: {},
     };
   },
   methods: {
@@ -77,41 +78,56 @@ export default {
       const query = { type };
       if (type !== 'add') {
         query.id = row.id;
+      } else {
+        if (this.selectedNode.id) {
+          query.parentId = this.selectedNode.id;
+          query.level = this.selectedNode.parentIds.split(',').length + 1;
+          if (query.level === 3) {
+            query.dictCode = this.selectedNode.dictCode;
+          }
+        } else {
+          query.level = 1;
+        }
       }
       this.$router.push({
         name: 'DictManageEdit',
         query,
       });
     },
-    handleClickTree(row) {
-      console.log(row);
+    handleClickTree(node) {
+      this.selectedNode = node;
+      this.queryList();
     },
     handleQuery() {
       this.pagination.currentPage = 1;
       this.queryList();
     },
     async queryList() {
-      // const { list, ...pagination } = await getUserList(this.pagination, this.queryForm);
-      // this.list = list;
-      // this.pagination = pagination;
+      const { list, ...pagination } = await getDictList(this.pagination, {
+        ...this.queryForm,
+        parentId: this.selectedNode.id,
+      });
+      this.list = list;
+      this.pagination = pagination;
     },
     handleSelectionChange(rows) {
       this.selectedRows = rows;
     },
     handleDeleteByRows(rows) {
-      // const names = rows.map(({ username }) => username);
-      // const ids = rows.map(({ id }) => id);
+      const names = rows.map(({ dictCode }) => dictCode);
+      const ids = rows.map(({ id }) => id);
 
-      // this.$confirmMsg({
-      //   message: `是否删除名称为 ${names.join(',')} 的用户`,
-      //   onOk: async () => {
-      //     const { code } = await deleteUser(ids);
-      //     if (code === 200) {
-      //       this.$message.success('删除成功');
-      //       this.queryList();
-      //     }
-      //   },
-      // });
+      this.$confirmMsg({
+        message: `是否删除名称为 ${names.join(',')} 的字典`,
+        onOk: async () => {
+          const { code } = await deleteDict(ids);
+          if (code === 200) {
+            this.$message.success('删除成功');
+            this.queryList();
+            this.$refs.tree.refreshList();
+          }
+        },
+      });
     },
   },
   components: {

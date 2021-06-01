@@ -126,10 +126,10 @@ public class UserController {
                 List<Predicate> list = new ArrayList<>();
 
                 if (!StringUtils.isEmpty(username)) {
-                    list.add(criteriaBuilder.like(root.get("username").as(String.class), "%" + username + "%"));
+                    list.add(criteriaBuilder.like(root.get("username"), "%" + username + "%"));
                 }
 
-                return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
+                return criteriaBuilder.and(list.toArray(new Predicate[0]));
             }
         };
 

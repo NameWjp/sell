@@ -4,7 +4,11 @@ import com.wangjp.sell.entity.Dict;
 import com.wangjp.sell.repository.DictRepository;
 import com.wangjp.sell.service.DictService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,7 +40,23 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public Page<Dict> findAll(Specification<Dict> specification, Pageable pageable) {
+        return repository.findAll(specification, pageable);
+    }
+
+    @Override
     public Dict findByDictValue(String dictValue) {
         return repository.findByDictValue(dictValue);
+    }
+
+    @Transactional
+    @Override
+    public void deleteDictWithIds(List<Integer> ids) {
+        repository.deleteDictWithIds(ids);
+    }
+
+    @Override
+    public List<Dict> findByParentId(Integer parentId) {
+        return repository.findByParentId(parentId);
     }
 }
