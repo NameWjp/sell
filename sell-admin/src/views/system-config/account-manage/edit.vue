@@ -5,10 +5,7 @@
         <el-input v-model="submitForm.username" :disabled="isView" />
       </my-form-item>
       <my-form-item label="是否启用" prop="isEnable">
-        <el-select v-model="submitForm.isEnable" :disabled="isView" style="width: 100%">
-          <el-option label="启用" :value="1" />
-          <el-option label="停用" :value="2" />
-        </el-select>
+        <dict-select v-model="submitForm.isEnable" :disabled="isView" dict-code="is_enable" />
       </my-form-item>
       <template slot="control">
         <el-button @click="handleBack">返回</el-button>
@@ -22,6 +19,7 @@
 import { MyForm, MyFormItem } from '@/components/MyForm';
 import LoadingBtn from '@/components/LoadingBtn';
 import { validateUsername } from '@/utils/validator';
+import DictSelect from '@/views/common/DictSelect';
 import { addUser, getUserInfoById, editUser } from '@/api/user';
 
 export default {
@@ -99,6 +97,7 @@ export default {
     MyForm,
     MyFormItem,
     LoadingBtn,
+    DictSelect,
   },
 };
 </script>

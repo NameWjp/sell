@@ -34,6 +34,7 @@ export default {
     return {
       type: this.$route.query.type,
       id: this.$route.query.id,
+      // 当前新增的层级
       level: null,
       submitForm: {
         parentId: null,

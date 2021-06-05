@@ -1,4 +1,4 @@
-import { getDictList } from '@/api/dict';
+import { getAllDictList } from '@/api/dict';
 
 const state = {
   dictList: [],
@@ -29,7 +29,7 @@ const mutations = {
 const actions = {
   async loadDictList({ state, commit }, refresh) {
     if (!state.dictList.length || refresh) {
-      const { data: list = [] } = await getDictList({ params: { type: 2 } });
+      const { data: list = [] } = await getAllDictList({ level: 3 });
       commit('SET_DICT_LIST', list);
       commit('SET_DICT_MAP', list);
     }

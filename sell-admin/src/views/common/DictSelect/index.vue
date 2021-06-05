@@ -13,7 +13,7 @@
       v-for="[dictValue, dictName] in options"
       :key="dictValue"
       :label="dictName"
-      :value="dictValue"
+      :value="Number(dictValue)"
     />
   </el-select>
 </template>

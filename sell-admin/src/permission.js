@@ -52,6 +52,7 @@ router.beforeEach(async (to, from, next) => {
           // }
           // 模拟权限
           store.commit('user/SET_ROLES', ['test']);
+          store.dispatch('dict/loadDictList', true);
           const accessRoutes = await store.dispatch('permission/generateRoutes', ['test']);
           resetRouter();
           router.addRoutes(accessRoutes);

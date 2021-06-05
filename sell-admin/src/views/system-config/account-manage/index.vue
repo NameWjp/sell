@@ -20,7 +20,11 @@
       <el-table-column type="selection" width="55" />
       <el-table-column type="index" width="50" />
       <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="isEnable" label="是否启用" />
+      <el-table-column prop="isEnable" label="是否启用">
+        <template #default="{ row }">
+          {{ row.isEnable | dict('is_enable') }}
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
         <template #default="{ row }">
           {{ row.createTime | datetime }}

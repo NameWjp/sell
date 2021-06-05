@@ -28,6 +28,8 @@ export function getDictInfo({ id }) {
   return get(`/dict/getInfo/${id}`);
 }
 
-export function getAllDictList() {
-  return get('/dict/allList');
+export function getAllDictList(params) {
+  return get('/dict/allList', {
+    params,
+  });
 }

@@ -34,6 +34,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjp
@@ -178,7 +179,11 @@ public class DictController {
 
     @ApiOperation("获取所有字典列表")
     @GetMapping("/allList")
-    public ResultVO<List<Dict>> allList() {
-        return ResultVOUtil.success(dictService.findAll());
+    public ResultVO<List<Dict>> allList(@RequestParam(required = false) Integer level) {
+        List<Dict> dictList = dictService.findAll();
+        if (level != null) {
+            dictList = dictList.stream().filter(e -> e.getParentIds().split(",").length == level).collect(Collectors.toList());
+        }
+        return ResultVOUtil.success(dictList);
     }
 }
