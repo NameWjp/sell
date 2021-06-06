@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
         return repository.save(user);
     }
 
-    @Transactional
     @Override
     public void deleteUsersWithIds(List<Integer> ids) {
         repository.deleteUsersWithIds(ids);

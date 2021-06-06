@@ -45,5 +45,24 @@ export default {
         activeMenu: '/system-config/dict-manage',
       },
     },
+    {
+      path: 'role-manage',
+      name: 'RoleManage',
+      component: () => import('@/views/system-config/role-manage'),
+      meta: {
+        tagKey: 'RoleManage',
+        title: '角色管理',
+      },
+    },
+    {
+      path: 'role-manage-edit',
+      name: 'RoleManageEdit',
+      component: () => import('@/views/system-config/role-manage/edit'),
+      meta: {
+        tagKey: 'RoleManage',
+        title: '角色管理',
+        activeMenu: '/system-config/role-manage',
+      },
+    },
   ],
 };

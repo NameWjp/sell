@@ -49,7 +49,6 @@ public class DictServiceImpl implements DictService {
         return repository.findByDictValue(dictValue);
     }
 
-    @Transactional
     @Override
     public void deleteDictWithIds(List<Integer> ids) {
         repository.deleteDictWithIds(ids);

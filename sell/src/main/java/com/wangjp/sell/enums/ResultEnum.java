@@ -41,7 +41,15 @@ public enum ResultEnum {
 
     DICT_ID_NOT_EMPTY(23, "字典id不能为空"),
 
-    DELETE_DICT_EXIST_CHILDREN(24, "删除的字典存在子节点")
+    DELETE_DICT_EXIST_CHILDREN(24, "删除的字典存在子节点"),
+
+    ROLE_ALREADY_EXIST(25, "角色已存在"),
+
+    ROLE_NOT_FIND(26, "未找到角色信息"),
+
+    ROLE_NAME_ALREADY_EXIST(27, "角色名称已存在"),
+
+    ROLE_ID_NOT_EMPTY(18, "角色id不能为空"),
 
     ;
 
