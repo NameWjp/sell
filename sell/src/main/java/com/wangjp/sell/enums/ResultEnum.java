@@ -17,40 +17,49 @@ public enum ResultEnum {
 
     PRODUCT_STOCK_ERROR(11, "商品库存不足"),
 
-    ORDER_NOT_EXIST(12, "订单不存在"),
+    ORDER_NOT_EXIST(21, "订单不存在"),
 
-    ORDER_DETAIL_NOT_EXIST(13, "订单详情不存在"),
+    ORDER_DETAIL_NOT_EXIST(22, "订单详情不存在"),
 
-    ORDER_STATUS_ERROR(14, "订单状态不正确"),
+    ORDER_STATUS_ERROR(23, "订单状态不正确"),
 
-    ORDER_PAY_STATUS_ERROR(15, "订单支付状态不正确"),
+    ORDER_PAY_STATUS_ERROR(24, "订单支付状态不正确"),
 
-    CART_EMPTY(16, "购物车不能为空"),
+    CART_EMPTY(31, "购物车不能为空"),
 
-    USER_NOT_FIND(17, "未找到用户信息"),
+    USER_NOT_FIND(41, "未找到用户信息"),
 
-    USER_ID_NOT_EMPTY(18, "用户id不能为空"),
+    USER_ID_NOT_EMPTY(42, "用户id不能为空"),
 
-    USER_ALREADY_EXIST(19, "用户已存在"),
+    USER_ALREADY_EXIST(43, "用户已存在"),
 
-    USERNAME_ALREADY_EXIST(20, "用户名称已存在"),
+    USER_USERNAME_ALREADY_EXIST(44, "用户名称已存在"),
 
-    DICT_NOT_EXIST(21, "字典不存在"),
+    DICT_NOT_EXIST(51, "字典不存在"),
 
-    DICT_VALUE_ALREADY_EXIST(22, "字典值已存在"),
+    DICT_PARENT_ID_NOT_EXIST(52, "字典父节点不存在"),
 
-    DICT_ID_NOT_EMPTY(23, "字典id不能为空"),
+    DICT_ID_NOT_EMPTY(54, "字典id不能为空"),
 
-    DELETE_DICT_EXIST_CHILDREN(24, "删除的字典存在子节点"),
+    DICT_DELETE_EXIST_CHILDREN(55, "删除的字典存在子节点"),
 
-    ROLE_ALREADY_EXIST(25, "角色已存在"),
+    ROLE_ALREADY_EXIST(61, "角色已存在"),
 
-    ROLE_NOT_FIND(26, "未找到角色信息"),
+    ROLE_NOT_FIND(62, "未找到角色信息"),
 
-    ROLE_NAME_ALREADY_EXIST(27, "角色名称已存在"),
+    ROLE_NAME_ALREADY_EXIST(63, "角色名称已存在"),
 
-    ROLE_ID_NOT_EMPTY(18, "角色id不能为空"),
+    ROLE_ID_NOT_EMPTY(64, "角色id不能为空"),
 
+    MENU_CODE_ALREADY_EXIST(71, "字典值已存在"),
+
+    MENU_PARENT_ID_NOT_EXIST(72, "菜单父节点不存在"),
+
+    MENU_NOT_EXIST(72, "菜单不存在"),
+
+    MENU_ID_NOT_EMPTY(73, "字典id不能为空"),
+
+    MENU_DELETE_EXIST_CHILDREN(74, "删除的菜单存在子节点"),
     ;
 
     private Integer code;

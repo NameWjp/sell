@@ -1,16 +1,11 @@
 package com.wangjp.sell.utils;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author wangjp
@@ -19,6 +14,74 @@ import java.util.Set;
  * @detail 树转换方法
  */
 public class TreeUtil {
+
+    /**
+     *
+     * @param list      tree集合
+     * @param clazz     集合元素类型
+     * @param <T>       泛型
+     */
+    public static <T> void sortTree(@NotNull List<T> list, @NotNull Class<T> clazz) {
+        sortTree(list, clazz, null, null);
+    }
+
+    /**
+     *
+     * @param list      tree集合
+     * @param clazz     集合元素类型
+     * @param sort      排序属性名称
+     * @param children  子节点集合属性名称
+     * @param <T>       泛型
+     */
+    public static <T> void sortTree(@NotNull List<T> list, @NotNull Class<T> clazz, String sort, String children) {
+        try {
+            if (StringUtils.isEmpty(sort)) sort = "sort";
+            if (StringUtils.isEmpty(children)) children = "children";
+
+            // 获取字段
+            Field sortField = getField(clazz, sort);
+            Field childrenField = getField(clazz, children);
+
+            // 开启可访问
+            sortField.setAccessible(true);
+            childrenField.setAccessible(true);
+
+            // 排序
+            sortTreeByField(list, sortField, childrenField);
+
+            // 关闭可访问
+            sortField.setAccessible(false);
+            childrenField.setAccessible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
+
+    private static <T> void sortTreeByField(
+            @NotNull List<T> list,
+            @NotNull Field sortField,
+            @NotNull Field childrenField
+    ) throws IllegalAccessException {
+        Collections.sort(list, new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                try {
+                    return (Integer) sortField.get(o1) - (Integer) sortField.get(o2);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException();
+                }
+            }
+        });
+
+        for (T node : list) {
+            List<T> children = (List<T>) childrenField.get(node);
+            if (!children.isEmpty()) {
+                sortTreeByField(children, sortField, childrenField);
+            }
+        }
+    }
 
     /**
      * 获取树前几级
@@ -60,9 +123,10 @@ public class TreeUtil {
 
             // 获取 children 字段，从当前对象或其父类
             Field childrenField = getField(clazz, children);
+
             childrenField.setAccessible(true);
 
-            setTreeChildrenByLevel(result, childrenField, level, 1);
+            cleanTreeChildrenByLevel(result, childrenField, level, 1);
 
             childrenField.setAccessible(false);
 
@@ -83,7 +147,7 @@ public class TreeUtil {
      * @return              新的树集合
      * @throws IllegalAccessException
      */
-    public static <T> void setTreeChildrenByLevel(
+    private static <T> void cleanTreeChildrenByLevel(
             @NotNull Collection<T> collection,
             @NotNull Field childrenField,
             @NotNull Integer targetLevel,
@@ -99,7 +163,7 @@ public class TreeUtil {
                 }
                 childrenField.set(node, children);
             } else {
-                setTreeChildrenByLevel(children, childrenField, targetLevel, currentLevel + 1);
+                cleanTreeChildrenByLevel(children, childrenField, targetLevel, currentLevel + 1);
             }
         }
     }
@@ -133,7 +197,7 @@ public class TreeUtil {
             @NotNull Class<T> clazz
     ) {
         try {
-            if (collection == null || collection.isEmpty()) return null;
+            if (collection == null || collection.isEmpty()) return new ArrayList<>();
             if (StringUtils.isEmpty(id)) id = "id";
             if (StringUtils.isEmpty(parentId)) parentId = "parentId";
             if (StringUtils.isEmpty(children)) children = "children";

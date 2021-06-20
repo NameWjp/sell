@@ -54,12 +54,6 @@ public class DictController {
     @ApiOperation("创建字典")
     @PostMapping("/create")
     public ResultVO<Object> create(@RequestBody @Validated DictForm dictForm) {
-        Dict preDict = dictService.findByDictValue(dictForm.getDictValue());
-        if (preDict != null) {
-            log.error("【新建字典】字典值已存在，preDict={}", preDict.toString());
-            throw new SellException(ResultEnum.DICT_VALUE_ALREADY_EXIST);
-        }
-
         Integer parentId = dictForm.getParentId();
         String parentIds;
         if (parentId == null) {
@@ -69,7 +63,7 @@ public class DictController {
             Dict parentDict = dictService.findById(parentId);
             if (parentDict == null) {
                 log.error("【新建字典】父级字典未找到，parentId={}", parentId);
-                throw new SellException(ResultEnum.DICT_NOT_EXIST);
+                throw new SellException(ResultEnum.DICT_PARENT_ID_NOT_EXIST);
             }
             parentIds = parentDict.getParentIds().concat(",").concat(parentDict.getId().toString());
         }
@@ -113,7 +107,7 @@ public class DictController {
             List<Dict> children = dictService.findByParentId(id);
             if (!CollectionUtils.isEmpty(children)) {
                 log.error("【删除字典】存在子节点，id={}", id);
-                throw new SellException(ResultEnum.DELETE_DICT_EXIST_CHILDREN);
+                throw new SellException(ResultEnum.DICT_DELETE_EXIST_CHILDREN);
             }
         }
         dictService.deleteDictWithIds(ids);

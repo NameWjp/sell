@@ -5,7 +5,7 @@ export default {
   name: 'SystemConfig',
   component: Layout,
   redirect: 'noRedirect',
-  meta: { title: '系统配置' },
+  meta: { title: '系统配置', icon: 'setting' },
   children: [
     {
       path: 'account-manage',
@@ -62,6 +62,25 @@ export default {
         tagKey: 'RoleManage',
         title: '角色管理',
         activeMenu: '/system-config/role-manage',
+      },
+    },
+    {
+      path: 'menu-manage',
+      name: 'MenuManage',
+      component: () => import('@/views/system-config/menu-manage'),
+      meta: {
+        tagKey: 'MenuManage',
+        title: '菜单管理',
+      },
+    },
+    {
+      path: 'menu-manage-edit',
+      name: 'MenuManageEdit',
+      component: () => import('@/views/system-config/menu-manage/edit'),
+      meta: {
+        tagKey: 'MenuManage',
+        title: '菜单管理',
+        activeMenu: '/system-config/menu-manage',
       },
     },
   ],

@@ -77,7 +77,7 @@ public class UserController {
             User preUser = userService.findByUsername(userForm.getUsername());
             if (preUser != null) {
                 log.error("【修改用户】用户名称已存在，id={}，username={}", preUser.getId(), preUser.getUsername());
-                throw new SellException(ResultEnum.USERNAME_ALREADY_EXIST);
+                throw new SellException(ResultEnum.USER_USERNAME_ALREADY_EXIST);
             }
         }
 

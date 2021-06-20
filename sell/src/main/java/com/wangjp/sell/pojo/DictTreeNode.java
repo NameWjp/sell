@@ -15,7 +15,6 @@ import java.util.List;
  * @detail 字典树结构
  */
 @Data
-@ToString(callSuper = true)
 public class DictTreeNode {
 
     private Integer id;
@@ -30,8 +29,6 @@ public class DictTreeNode {
     private String dictName;
 
     private String dictValue;
-
-    private Date createTime;
 
     private List<DictTreeNode> children = new ArrayList<>();
 }

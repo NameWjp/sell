@@ -28,6 +28,7 @@ const state = {
       { url: '/system-config/account-manage' },
       { url: '/system-config/dict-manage' },
       { url: '/system-config/role-manage' },
+      { url: '/system-config/menu-manage' },
     ],
   },
   menuTree: [
@@ -54,6 +55,10 @@ const state = {
         {
           name: '角色管理',
           url: '/system-config/role-manage',
+        },
+        {
+          name: '菜单管理',
+          url: '/system-config/menu-manage',
         },
       ],
     },

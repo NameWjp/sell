@@ -12,7 +12,7 @@ export function addDict(data) {
   return post('/dict/create', data);
 }
 
-export function editDiet(data) {
+export function editDict(data) {
   return post(`/dict/update/${data.id}`, data);
 }
 
