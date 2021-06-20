@@ -59,6 +59,12 @@ export default {
         type: [
           { required: true, message: '类型不能为空' },
         ],
+        code: [
+          { required: true, message: '编号不能为空' },
+        ],
+        sort: [
+          { required: true, message: '排序不能为空' },
+        ],
       },
     };
   },

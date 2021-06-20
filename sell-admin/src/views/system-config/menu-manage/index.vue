@@ -1,7 +1,7 @@
 <template>
   <div class="directory-layout">
     <div class="directory">
-      <tree-query ref="tree" :tree-request="getMenuTree" @click="handleClickTree" />
+      <tree-query ref="tree" :default-expande-level="1" :tree-request="getMenuTree" @click="handleClickTree" />
     </div>
     <div class="main-layout">
       <div class="page-control">

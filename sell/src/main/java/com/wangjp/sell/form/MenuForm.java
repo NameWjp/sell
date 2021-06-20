@@ -35,9 +35,11 @@ public class MenuForm {
     @ApiModelProperty(value = "父节点id")
     private Integer parentId;
 
+    @NotNull(message = "排序不能为空")
     @ApiModelProperty(value = "排序")
     private Integer sort;
 
+    @NotNull(message = "菜单编码不能为空")
     @ApiModelProperty(value = "菜单编码")
     private String code;
 }
