@@ -7,4 +7,6 @@ package com.wangjp.sell.constant;
  * @detail
  */
 public class OrganConstant {
+
+    public static Integer rootParentId = 0;
 }

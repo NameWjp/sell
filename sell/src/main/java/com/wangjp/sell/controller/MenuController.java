@@ -59,8 +59,26 @@ public class MenuController {
             throw new SellException(ResultEnum.MENU_CODE_ALREADY_EXIST);
         }
 
+        Integer parentId = menuForm.getParentId();
+        if (parentId == null) {
+            parentId = MenuConstant.rootParentId;
+        } else {
+            Menu parentMenu = menuService.findById(parentId);
+            if (parentMenu == null) {
+                log.error("【新建菜单】父级菜单未找到，parentId={}", parentId);
+                throw new SellException(ResultEnum.MENU_PARENT_ID_NOT_EXIST);
+            }
+        }
+
         Menu menu = new Menu();
-        setMenuByMenuForm(menu, menuForm);
+
+        menu.setUrl(menuForm.getUrl());
+        menu.setType(menuForm.getType());
+        menu.setIcon(menuForm.getIcon());
+        menu.setName(menuForm.getName());
+        menu.setParentId(parentId);
+        menu.setSort(menuForm.getSort());
+        menu.setCode(menuForm.getCode());
 
         menuService.save(menu);
 
@@ -102,7 +120,24 @@ public class MenuController {
             }
         }
 
-        setMenuByMenuForm(menu, menuForm);
+        Integer parentId = menuForm.getParentId();
+        if (parentId == null) {
+            parentId = MenuConstant.rootParentId;
+        } else if (!parentId.equals(MenuConstant.rootParentId)){
+            Menu parentMenu = menuService.findById(parentId);
+            if (parentMenu == null) {
+                log.error("【修改菜单】父级菜单未找到，parentId={}", parentId);
+                throw new SellException(ResultEnum.MENU_PARENT_ID_NOT_EXIST);
+            }
+        }
+
+        menu.setUrl(menuForm.getUrl());
+        menu.setType(menuForm.getType());
+        menu.setIcon(menuForm.getIcon());
+        menu.setName(menuForm.getName());
+        menu.setParentId(parentId);
+        menu.setSort(menuForm.getSort());
+        menu.setCode(menuForm.getCode());
 
         menuService.save(menu);
 
@@ -158,31 +193,10 @@ public class MenuController {
 
     @ApiOperation("获取树结构")
     @GetMapping("/getTree")
-    public ResultVO<Collection<MenuTreeNode>> getSubTree() {
+    public ResultVO<Collection<MenuTreeNode>> getTree() {
         List<MenuTreeNode> menuTreeNodeList = Menu2MenuTreeNodeConverter.convert(menuService.findAll());
         List<MenuTreeNode> tree = (List<MenuTreeNode>)TreeUtil.list2Tree(menuTreeNodeList, MenuTreeNode.class);
         TreeUtil.sortTree(tree, MenuTreeNode.class);
         return ResultVOUtil.success(tree);
-    }
-
-    private void setMenuByMenuForm(Menu menu, MenuForm menuForm) {
-        Integer parentId = menuForm.getParentId();
-        if (parentId == null) {
-            parentId = MenuConstant.rootParentId;
-        } else if (!parentId.equals(MenuConstant.rootParentId)){
-            Menu parentMenu = menuService.findById(parentId);
-            if (parentMenu == null) {
-                log.error("【新建或修改菜单】父级菜单未找到，parentId={}", parentId);
-                throw new SellException(ResultEnum.MENU_PARENT_ID_NOT_EXIST);
-            }
-        }
-
-        menu.setUrl(menuForm.getUrl());
-        menu.setType(menuForm.getType());
-        menu.setIcon(menuForm.getIcon());
-        menu.setName(menuForm.getName());
-        menu.setParentId(parentId);
-        menu.setSort(menuForm.getSort());
-        menu.setCode(menuForm.getCode());
     }
 }

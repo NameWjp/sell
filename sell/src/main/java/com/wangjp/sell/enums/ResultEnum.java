@@ -55,11 +55,19 @@ public enum ResultEnum {
 
     MENU_PARENT_ID_NOT_EXIST(72, "菜单父节点不存在"),
 
-    MENU_NOT_EXIST(72, "菜单不存在"),
+    MENU_NOT_EXIST(73, "菜单不存在"),
 
-    MENU_ID_NOT_EMPTY(73, "字典id不能为空"),
+    MENU_ID_NOT_EMPTY(74, "字典id不能为空"),
 
-    MENU_DELETE_EXIST_CHILDREN(74, "删除的菜单存在子节点"),
+    MENU_DELETE_EXIST_CHILDREN(75, "删除的菜单存在子节点"),
+
+    ORGAN_PARENT_ID_NOT_EXIST(81, "菜单父节点不存在"),
+
+    ORGAN_NOT_EXIST(82, "组织机构不存在"),
+
+    ORGAN_ID_NOT_EMPTY(83, "组织机构id不能为空"),
+
+    ORGAN_DELETE_EXIST_CHILDREN(84, "删除的菜单存在子节点"),
     ;
 
     private Integer code;

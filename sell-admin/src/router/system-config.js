@@ -83,5 +83,24 @@ export default {
         activeMenu: '/system-config/menu-manage',
       },
     },
+    {
+      path: 'organ-manage',
+      name: 'OrganManage',
+      component: () => import('@/views/system-config/organ-manage'),
+      meta: {
+        tagKey: 'OrganManage',
+        title: '组织机构管理',
+      },
+    },
+    {
+      path: 'organ-manage-edit',
+      name: 'OrganManageEdit',
+      component: () => import('@/views/system-config/organ-manage/edit'),
+      meta: {
+        tagKey: 'OrganManage',
+        title: '组织机构管理',
+        activeMenu: '/system-config/organ-manage',
+      },
+    },
   ],
 };

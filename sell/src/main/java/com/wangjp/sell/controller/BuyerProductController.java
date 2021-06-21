@@ -44,8 +44,8 @@ public class BuyerProductController {
         List<ProductInfo> productInfoList = productService.findUpAll();
 
         // 查询商品的类目
-        List<String> categoryTypeList = productInfoList.stream().map(ProductInfo::getCategoryCode).distinct().collect(Collectors.toList());
-        List<ProductCategory> productCategoryList = categoryService.findByCodeIn(categoryTypeList);
+        List<String> categoryCodeList = productInfoList.stream().map(ProductInfo::getCategoryCode).distinct().collect(Collectors.toList());
+        List<ProductCategory> productCategoryList = categoryService.findByCodeIn(categoryCodeList);
 
         // 数据拼装
         List<ProductVO> productVOList = new ArrayList<>();

@@ -29,6 +29,7 @@ public class MenuForm {
     @ApiModelProperty(value = "菜单图标")
     private String icon;
 
+    @NotBlank(message = "菜单名称不能为空")
     @ApiModelProperty(value = "菜单名称")
     private String name;
 
