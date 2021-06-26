@@ -28,7 +28,17 @@
           </el-row>
         </el-col>
         <el-col :span="12">
-          权限树
+          <el-form-item label="权限配置" prop="privilegeIds">
+            <el-tree
+              ref="tree"
+              node-key="id"
+              :data="privilegeTree"
+              show-checkbox
+              :render-after-expand="false"
+              :props="treeProps"
+              @check-change="handleCheckTree"
+            />
+          </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -38,6 +48,8 @@
 <script>
 import LoadingBtn from '@/components/LoadingBtn';
 import { addRole, getRoleInfoById, editRole } from '@/api/role';
+import { getMenuTree } from '@/api/menu';
+import { getLeafKeys } from '@/utils/tree';
 
 export default {
   name: 'RoleManageEdit',
@@ -45,12 +57,20 @@ export default {
     return {
       type: this.$route.query.type,
       id: this.$route.query.id,
+      privilegeTree: [],
+      treeProps: {
+        children: 'children',
+        label: 'name',
+      },
       submitForm: {
-        isEnable: 1,
+        privilegeIds: [],
       },
       submitRules: {
         name: [
           { required: true, message: '角色名称不能为空' },
+        ],
+        privilegeIds: [
+          { required: true, message: '权限配置不能为空' },
         ],
       },
     };
@@ -66,17 +86,36 @@ export default {
       return this.type === 'view';
     },
   },
-  mounted() {
+  async mounted() {
+    await this.getPrivilegeTree();
     if (this.isEdit || this.isView) {
       this.getDetail();
     }
   },
   methods: {
+    handleCheckTree() {
+      this.submitForm.privilegeIds = this.$refs.tree.getCheckedNodes(false, true).map(({ id }) => id);
+    },
+    async getPrivilegeTree() {
+      const { data } = await getMenuTree();
+      this.privilegeTree = data;
+    },
     async getDetail() {
       const { data } = await getRoleInfoById({ id: this.id });
+
+      const { privilegeIds, ...form } = data;
+
+      if (privilegeIds && privilegeIds.length) {
+        this.$nextTick(() => {
+          const leafKeys = getLeafKeys(this.privilegeTree);
+          const keys = privilegeIds.filter(id => leafKeys.includes(id));
+          this.$refs.tree.setCheckedKeys(keys, true);
+        });
+      }
+
       this.submitForm = {
         ...this.submitForm,
-        ...data,
+        ...form,
       };
     },
     handleBack() {
@@ -93,6 +132,7 @@ export default {
       const data = {
         ...this.submitForm,
       };
+
       if (this.isAdd) {
         ({ code } = await addRole(data));
       }

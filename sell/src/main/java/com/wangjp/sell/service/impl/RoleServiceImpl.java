@@ -1,6 +1,8 @@
 package com.wangjp.sell.service.impl;
 
 import com.wangjp.sell.entity.Role;
+import com.wangjp.sell.entity.RoleMenu;
+import com.wangjp.sell.repository.RoleMenuRepository;
 import com.wangjp.sell.repository.RoleRepository;
 import com.wangjp.sell.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjp
@@ -21,30 +26,55 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    RoleRepository repository;
+    RoleRepository roleRepository;
+
+    @Autowired
+    RoleMenuRepository roleMenuRepository;
 
     @Override
     public Role findById(Integer id) {
-        return repository.findById(id).orElse(null);
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override
     public Role findByName(String name) {
-        return repository.findByName(name);
+        return roleRepository.findByName(name);
     }
 
     @Override
     public Page<Role> findAll(Specification<Role> specification, Pageable pageable) {
-        return repository.findAll(specification, pageable);
+        return roleRepository.findAll(specification, pageable);
     }
 
     @Override
-    public Role save(Role role) {
-        return repository.save(role);
+    public Role save(Role role, List<Integer> privilegeIds) {
+        Role saveRole = roleRepository.save(role);
+
+        List<RoleMenu> roleMenuList = roleMenuRepository.findByRoleId(saveRole.getId());
+        List<Integer> commonIds = roleMenuList.stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+        commonIds.retainAll(privilegeIds);
+
+        List<Integer> deleteIds = roleMenuList.stream().filter(item -> !commonIds.contains(item.getMenuId())).map(RoleMenu::getId).collect(Collectors.toList());
+        List<RoleMenu> addRoleMenus = privilegeIds.stream().filter(id -> !commonIds.contains(id)).map(menuId -> {
+            RoleMenu roleMenu = new RoleMenu();
+            roleMenu.setRoleId(saveRole.getId());
+            roleMenu.setMenuId(menuId);
+            return roleMenu;
+        }).collect(Collectors.toList());
+
+        if (!CollectionUtils.isEmpty(deleteIds)) {
+            roleMenuRepository.deleteRoleMenuWithIds(deleteIds);
+        }
+
+        if (!CollectionUtils.isEmpty(addRoleMenus)) {
+            roleMenuRepository.saveAll(addRoleMenus);
+        }
+
+        return saveRole;
     }
 
     @Override
     public void deleteUsersWithIds(List<Integer> ids) {
-        repository.deleteRoleWithIds(ids);
+        roleRepository.deleteRoleWithIds(ids);
     }
 }

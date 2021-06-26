@@ -127,3 +127,21 @@ export function listToTree(source, pid = 0) {
   });
   return result;
 }
+
+// 获取所有叶子节点
+export function getLeafKeys(tree, keyName = 'id', childrenKey = 'children') {
+  const result = [];
+  const stack = [...tree];
+  let tempNode;
+
+  while (stack.length > 0) {
+    tempNode = stack.pop();
+    if (tempNode[childrenKey] && tempNode[childrenKey].length) {
+      stack.push(...tempNode[childrenKey]);
+    } else {
+      result.push(tempNode[keyName]);
+    }
+  }
+
+  return result;
+}

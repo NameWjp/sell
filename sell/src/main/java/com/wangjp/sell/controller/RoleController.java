@@ -1,15 +1,19 @@
 package com.wangjp.sell.controller;
 
 import com.wangjp.sell.converter.Page2PaginationVOConverter;
+import com.wangjp.sell.converter.Role2RoleVOConverter;
 import com.wangjp.sell.entity.Role;
+import com.wangjp.sell.entity.RoleMenu;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
 import com.wangjp.sell.form.RoleForm;
 import com.wangjp.sell.groups.Update;
+import com.wangjp.sell.service.RoleMenuService;
 import com.wangjp.sell.service.RoleService;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.vo.PaginationVO;
 import com.wangjp.sell.vo.ResultVO;
+import com.wangjp.sell.vo.RoleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +33,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjp
@@ -45,6 +50,9 @@ public class RoleController {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    RoleMenuService roleMenuService;
+
     @ApiOperation("创建角色")
     @PostMapping("/create")
     public ResultVO<Object> create(@RequestBody @Validated RoleForm roleForm) {
@@ -56,7 +64,7 @@ public class RoleController {
         Role role = new Role();
         role.setName(roleForm.getName());
         role.setDescription(roleForm.getDescription());
-        roleService.save(role);
+        roleService.save(role, roleForm.getPrivilegeIds());
         return ResultVOUtil.success();
     }
 
@@ -79,19 +87,24 @@ public class RoleController {
 
         role.setName(roleForm.getName());
         role.setDescription(roleForm.getDescription());
-        roleService.save(role);
+        roleService.save(role, roleForm.getPrivilegeIds());
         return ResultVOUtil.success();
     }
 
     @ApiOperation("查询角色")
     @GetMapping("/getInfo/{id}")
-    public ResultVO<Role> getRoleInfo(@PathVariable("id") Integer id) {
+    public ResultVO<RoleVO> getRoleInfo(@PathVariable("id") Integer id) {
         Role role = roleService.findById(id);
         if (role == null) {
             log.error("【查询角色】未找到角色信息，id={}", id);
             throw new SellException(ResultEnum.ROLE_NOT_FIND);
         }
-        return ResultVOUtil.success(role);
+
+        List<Integer> privilegeIds = roleMenuService.findByRoleId(role.getId()).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+
+        RoleVO roleVO = Role2RoleVOConverter.convert(role, privilegeIds);
+
+        return ResultVOUtil.success(roleVO);
     }
 
     @ApiOperation("删除角色")

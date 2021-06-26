@@ -1,5 +1,9 @@
 package com.wangjp.sell.service;
 
+import com.wangjp.sell.entity.RoleMenu;
+
+import java.util.List;
+
 /**
  * @author wangjp
  * @email 943375372@qq.com
@@ -7,4 +11,6 @@ package com.wangjp.sell.service;
  * @detail
  */
 public interface RoleMenuService {
+
+    List<RoleMenu> findByRoleId(Integer roleId);
 }
