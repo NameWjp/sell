@@ -21,6 +21,8 @@ public interface RoleService {
 
     Page<Role> findAll(Specification<Role> specification, Pageable pageable);
 
+    List<Role> findAll(Specification<Role> specification);
+
     Role save(Role role, List<Integer> privilegeIds);
 
     void deleteUsersWithIds(List<Integer> ids);

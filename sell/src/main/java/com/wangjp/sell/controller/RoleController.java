@@ -10,6 +10,7 @@ import com.wangjp.sell.form.RoleForm;
 import com.wangjp.sell.groups.Update;
 import com.wangjp.sell.service.RoleMenuService;
 import com.wangjp.sell.service.RoleService;
+import com.wangjp.sell.utils.PaginationUtil;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.vo.PaginationVO;
 import com.wangjp.sell.vo.ResultVO;
@@ -91,7 +92,7 @@ public class RoleController {
         return ResultVOUtil.success();
     }
 
-    @ApiOperation("查询角色")
+    @ApiOperation("查询角色详情")
     @GetMapping("/getInfo/{id}")
     public ResultVO<RoleVO> getRoleInfo(@PathVariable("id") Integer id) {
         Role role = roleService.findById(id);
@@ -125,7 +126,7 @@ public class RoleController {
             @RequestParam Integer pageNum,
             @RequestParam(required = false) String name
     ) {
-        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+        PaginationVO<Role> result;
 
         Specification<Role> specification = new Specification<Role>() {
             @Override
@@ -142,8 +143,15 @@ public class RoleController {
             }
         };
 
-        Page<Role> rolePage = roleService.findAll(specification, pageRequest);
+        if (pageSize == 0) {
+            List<Role> roleList = roleService.findAll(specification);
+            result = PaginationUtil.genNotPaging(roleList);
+        } else {
+            PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+            result = Page2PaginationVOConverter.convert(roleService.findAll(specification, pageRequest));
+        }
 
-        return ResultVOUtil.success(Page2PaginationVOConverter.convert(rolePage));
+
+        return ResultVOUtil.success(result);
     }
 }

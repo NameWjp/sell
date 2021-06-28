@@ -1,5 +1,9 @@
 package com.wangjp.sell.service;
 
+import com.wangjp.sell.entity.UserRole;
+
+import java.util.List;
+
 /**
  * @author wangjp
  * @email 943375372@qq.com
@@ -7,4 +11,6 @@ package com.wangjp.sell.service;
  * @detail
  */
 public interface UserRoleService {
+
+    List<UserRole> findByUserId(Integer userId);
 }

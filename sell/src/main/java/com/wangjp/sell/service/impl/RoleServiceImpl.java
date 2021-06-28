@@ -47,6 +47,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<Role> findAll(Specification<Role> specification) {
+        return roleRepository.findAll(specification);
+    }
+
+    @Override
     public Role save(Role role, List<Integer> privilegeIds) {
         Role saveRole = roleRepository.save(role);
 

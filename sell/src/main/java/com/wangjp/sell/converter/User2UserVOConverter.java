@@ -21,6 +21,7 @@ public class User2UserVOConverter {
         userVO.setUsername(user.getUsername());
         userVO.setCreateTime(user.getCreateTime());
         userVO.setUpdateTime(user.getUpdateTime());
+        userVO.setOrganId(user.getOrganId());
 
         return userVO;
     }

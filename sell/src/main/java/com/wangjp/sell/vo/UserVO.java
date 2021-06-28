@@ -19,6 +19,8 @@ public class UserVO {
 
     private Integer isEnable;
 
+    private Integer organId;
+
     private Date createTime;
 
     private Date updateTime;

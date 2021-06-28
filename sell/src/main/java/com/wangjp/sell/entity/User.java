@@ -30,6 +30,9 @@ public class User extends AbstractAuditModel {
     // 用户密码
     private String password;
 
+    // 组织机构id
+    private Integer organId;
+
     // 是否启用
     private Integer isEnable;
 }

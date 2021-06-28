@@ -23,6 +23,8 @@ public interface OrganService {
 
     Page<Organ> findAll(Specification<Organ> specification, Pageable pageable);
 
+    List<Organ> findAll(Specification<Organ> specification);
+
     List<Organ> findAll();
 
     void deleteOrganWithIds(List<Integer> ids);

@@ -3,6 +3,7 @@
     :value="value"
     filterable
     clearable
+    :multiple="multiple"
     placeholder="请选择"
     style="width: 100%"
     :disabled="disabled"
@@ -21,7 +22,7 @@
 <script>
 export default {
   props: {
-    value: [Number, String],
+    value: [Number, String, Array],
     listRequest: {
       type: Function,
     },
@@ -30,6 +31,10 @@ export default {
       default: 'name',
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    multiple: {
       type: Boolean,
       default: false,
     },

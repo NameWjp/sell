@@ -11,6 +11,7 @@ import com.wangjp.sell.form.OrganForm;
 import com.wangjp.sell.groups.Update;
 import com.wangjp.sell.pojo.OrganTreeNode;
 import com.wangjp.sell.service.OrganService;
+import com.wangjp.sell.utils.PaginationUtil;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.utils.TreeUtil;
 import com.wangjp.sell.vo.OrganVO;
@@ -131,7 +132,7 @@ public class OrganController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer parentId
     ) {
-        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+        PaginationVO<OrganVO> result;
 
         Specification<Organ> specification = new Specification<Organ>() {
             @Override
@@ -150,12 +151,22 @@ public class OrganController {
             }
         };
 
-        Page<Organ> organPage = organService.findAll(specification, pageRequest);
-        List<Integer> parentIds = organPage.getContent().stream().map(Organ::getParentId).distinct().collect(Collectors.toList());
-        List<Organ> parentList = organService.findByIdIn(parentIds);
-        Page<OrganVO> organVOPage = organPage.map(organ -> Organ2OrganVOConverter.convert(organ, parentList));
+        if (pageSize == 0) {
+            List<Organ> organList = organService.findAll(specification);
+            List<Integer> parentIds = organList.stream().map(Organ::getParentId).distinct().collect(Collectors.toList());
+            List<Organ> parentList = organService.findByIdIn(parentIds);
+            List<OrganVO> organVOList = Organ2OrganVOConverter.convert(organList, parentList);
+            result = PaginationUtil.genNotPaging(organVOList);
+        } else {
+            PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+            Page<Organ> organPage = organService.findAll(specification, pageRequest);
+            List<Integer> parentIds = organPage.getContent().stream().map(Organ::getParentId).distinct().collect(Collectors.toList());
+            List<Organ> parentList = organService.findByIdIn(parentIds);
+            Page<OrganVO> organVOPage = organPage.map(organ -> Organ2OrganVOConverter.convert(organ, parentList));
+            result = Page2PaginationVOConverter.convert(organVOPage);
+        }
 
-        return ResultVOUtil.success(Page2PaginationVOConverter.convert(organVOPage));
+        return ResultVOUtil.success(result);
     }
 
     @ApiOperation("查询组织机构")

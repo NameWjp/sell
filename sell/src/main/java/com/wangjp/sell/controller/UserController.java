@@ -2,16 +2,20 @@ package com.wangjp.sell.controller;
 
 import com.wangjp.sell.constant.UserConstant;
 import com.wangjp.sell.converter.Page2PaginationVOConverter;
+import com.wangjp.sell.converter.User2UserRoleVOConverter;
 import com.wangjp.sell.converter.User2UserVOConverter;
 import com.wangjp.sell.entity.User;
+import com.wangjp.sell.entity.UserRole;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
 import com.wangjp.sell.form.UserForm;
 import com.wangjp.sell.groups.Update;
+import com.wangjp.sell.service.UserRoleService;
 import com.wangjp.sell.service.UserService;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.vo.PaginationVO;
 import com.wangjp.sell.vo.ResultVO;
+import com.wangjp.sell.vo.UserRoleVO;
 import com.wangjp.sell.vo.UserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +36,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjp
@@ -48,6 +53,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRoleService userRoleService;
+
     @ApiOperation("创建用户")
     @PostMapping("/create")
     public ResultVO<Object> create(@RequestBody @Validated UserForm userForm) {
@@ -60,7 +68,8 @@ public class UserController {
         user.setUsername(userForm.getUsername());
         user.setPassword(UserConstant.defaultPassword);
         user.setIsEnable(userForm.getIsEnable());
-        userService.save(user);
+        user.setOrganId(userForm.getOrganId());
+        userService.save(user, userForm.getRoleIds());
         return ResultVOUtil.success();
     }
 
@@ -83,19 +92,23 @@ public class UserController {
 
         user.setUsername(userForm.getUsername());
         user.setIsEnable(userForm.getIsEnable());
-        userService.save(user);
+        user.setOrganId(userForm.getOrganId());
+        userService.save(user, userForm.getRoleIds());
         return ResultVOUtil.success();
     }
 
-    @ApiOperation("查询用户")
+    @ApiOperation("查询用户详情")
     @GetMapping("/getInfo/{id}")
-    public ResultVO<UserVO> getUserInfo(@PathVariable("id") Integer id) {
+    public ResultVO<UserRoleVO> getUserInfo(@PathVariable("id") Integer id) {
         User user = userService.findById(id);
         if (user == null) {
             log.error("【查询用户】未找到用户信息，id={}", id);
             throw new SellException(ResultEnum.USER_NOT_FIND);
         }
-        return ResultVOUtil.success(User2UserVOConverter.convert(user));
+
+        List<Integer> roleIds = userRoleService.findByUserId(user.getId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+
+        return ResultVOUtil.success(User2UserRoleVOConverter.convert(user, roleIds));
     }
 
     @ApiOperation("删除用户")

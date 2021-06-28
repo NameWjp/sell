@@ -7,6 +7,12 @@
       <my-form-item label="是否启用" prop="isEnable">
         <dict-select v-model="submitForm.isEnable" :disabled="isView" dict-code="is_enable" />
       </my-form-item>
+      <my-form-item label="角色" prop="roleIds">
+        <list-select v-model="submitForm.roleIds" multiple :list-request="getRoleList" />
+      </my-form-item>
+      <my-form-item label="组织机构" prop="organId">
+        <organ-tree-select v-model="submitForm.organId" />
+      </my-form-item>
       <template slot="control">
         <el-button @click="handleBack">返回</el-button>
         <loading-btn type="primary" @click="handleSubmit">保存</loading-btn>
@@ -20,16 +26,21 @@ import { MyForm, MyFormItem } from '@/components/MyForm';
 import LoadingBtn from '@/components/LoadingBtn';
 import { validateUsername } from '@/utils/validator';
 import DictSelect from '@/views/common/DictSelect';
+import ListSelect from '@/views/common/ListSelect';
+import OrganTreeSelect from '@/views/common/OrganTreeSelect';
 import { addUser, getUserInfoById, editUser } from '@/api/user';
+import { getRoleList } from '@/api/role';
 
 export default {
   name: 'AccountManageEdit',
   data() {
+    this.getRoleList = getRoleList;
     return {
       type: this.$route.query.type,
       id: this.$route.query.id,
       submitForm: {
         isEnable: 1,
+        roleIds: [],
       },
       submitRules: {
         username: [
@@ -38,6 +49,9 @@ export default {
         ],
         isEnable: [
           { required: true, message: '是否启用不能为空' },
+        ],
+        roleIds: [
+          { required: true, message: '角色不能为空' },
         ],
       },
     };
@@ -98,9 +112,12 @@ export default {
     MyFormItem,
     LoadingBtn,
     DictSelect,
+    ListSelect,
+    OrganTreeSelect,
   },
 };
 </script>
+    MyFormItem
 
 <style scoped lang="scss">
 </style>

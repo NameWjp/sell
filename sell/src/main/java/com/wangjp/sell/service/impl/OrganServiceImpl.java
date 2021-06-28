@@ -44,6 +44,11 @@ public class OrganServiceImpl implements OrganService {
     }
 
     @Override
+    public List<Organ> findAll(Specification<Organ> specification) {
+        return repository.findAll(specification);
+    }
+
+    @Override
     public List<Organ> findAll() {
         return repository.findAll();
     }

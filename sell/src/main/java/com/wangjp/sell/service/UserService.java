@@ -21,7 +21,7 @@ public interface UserService {
 
     Page<User> findAll(Specification<User> specification, Pageable pageable);
 
-    User save(User user);
+    User save(User user, List<Integer> roleIds);
 
     void deleteUsersWithIds(List<Integer> ids);
 }

@@ -7,6 +7,7 @@ import settings from './modules/settings';
 import user from './modules/user';
 import tagsView from './modules/tagsView';
 import dict from './modules/dict';
+import organization from './modules/organization';
 
 Vue.use(Vuex);
 
@@ -17,6 +18,7 @@ const store = new Vuex.Store({
     settings,
     user,
     tagsView,
+    organization,
     dict,
   },
   getters,
