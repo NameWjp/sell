@@ -1,5 +1,6 @@
 package com.wangjp.sell.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -20,6 +21,8 @@ public class UserVO {
     private Integer isEnable;
 
     private Integer organId;
+
+    private String organName;
 
     private Date createTime;
 

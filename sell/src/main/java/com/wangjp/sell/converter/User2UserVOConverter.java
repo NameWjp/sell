@@ -1,5 +1,6 @@
 package com.wangjp.sell.converter;
 
+import com.wangjp.sell.entity.Organ;
 import com.wangjp.sell.entity.User;
 import com.wangjp.sell.vo.UserVO;
 
@@ -14,7 +15,14 @@ import java.util.stream.Collectors;
  */
 public class User2UserVOConverter {
 
-    public static UserVO convert(User user) {
+    public static UserVO convert(User user, List<Organ> organList) {
+        String organName = "";
+        for (Organ organ : organList) {
+            if (organ.getId().equals(user.getOrganId())) {
+                organName = organ.getName();
+            }
+        }
+
         UserVO userVO = new UserVO();
         userVO.setId(user.getId());
         userVO.setIsEnable(user.getIsEnable());
@@ -22,11 +30,12 @@ public class User2UserVOConverter {
         userVO.setCreateTime(user.getCreateTime());
         userVO.setUpdateTime(user.getUpdateTime());
         userVO.setOrganId(user.getOrganId());
+        userVO.setOrganName(organName);
 
         return userVO;
     }
 
-    public static List<UserVO> convert(List<User> userList) {
-        return userList.stream().map(User2UserVOConverter::convert).collect(Collectors.toList());
+    public static List<UserVO> convert(List<User> userList, List<Organ> organList) {
+        return userList.stream().map(user -> User2UserVOConverter.convert(user, organList)).collect(Collectors.toList());
     }
 }

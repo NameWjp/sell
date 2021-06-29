@@ -1,5 +1,6 @@
 package com.wangjp.sell.form;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -14,5 +15,6 @@ import javax.validation.constraints.NotNull;
 public class OnlyIntIdForm {
 
     @NotNull(message = "id不能为空")
+    @ApiModelProperty(value = "id")
     private Integer id;
 }

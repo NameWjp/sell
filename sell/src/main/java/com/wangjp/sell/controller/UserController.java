@@ -4,12 +4,14 @@ import com.wangjp.sell.constant.UserConstant;
 import com.wangjp.sell.converter.Page2PaginationVOConverter;
 import com.wangjp.sell.converter.User2UserRoleVOConverter;
 import com.wangjp.sell.converter.User2UserVOConverter;
+import com.wangjp.sell.entity.Organ;
 import com.wangjp.sell.entity.User;
 import com.wangjp.sell.entity.UserRole;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
 import com.wangjp.sell.form.UserForm;
 import com.wangjp.sell.groups.Update;
+import com.wangjp.sell.service.OrganService;
 import com.wangjp.sell.service.UserRoleService;
 import com.wangjp.sell.service.UserService;
 import com.wangjp.sell.utils.ResultVOUtil;
@@ -26,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +59,12 @@ public class UserController {
     @Autowired
     private UserRoleService userRoleService;
 
+    @Autowired
+    private OrganService organService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @ApiOperation("创建用户")
     @PostMapping("/create")
     public ResultVO<Object> create(@RequestBody @Validated UserForm userForm) {
@@ -66,7 +75,7 @@ public class UserController {
         }
         User user = new User();
         user.setUsername(userForm.getUsername());
-        user.setPassword(UserConstant.defaultPassword);
+        user.setPassword(bCryptPasswordEncoder.encode(UserConstant.defaultPassword));
         user.setIsEnable(userForm.getIsEnable());
         user.setOrganId(userForm.getOrganId());
         userService.save(user, userForm.getRoleIds());
@@ -146,7 +155,10 @@ public class UserController {
             }
         };
 
-        Page<UserVO> userVOPage = userService.findAll(specification, pageRequest).map(User2UserVOConverter::convert);
+        Page<User> userPage = userService.findAll(specification, pageRequest);
+        List<Integer> organIds = userPage.getContent().stream().map(User::getOrganId).distinct().collect(Collectors.toList());
+        List<Organ> organList = organService.findByIdIn(organIds);
+        Page<UserVO> userVOPage = userPage.map(user -> User2UserVOConverter.convert(user, organList));
 
        return ResultVOUtil.success(Page2PaginationVOConverter.convert(userVOPage));
     }

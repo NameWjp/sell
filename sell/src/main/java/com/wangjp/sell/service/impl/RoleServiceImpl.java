@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -78,8 +79,20 @@ public class RoleServiceImpl implements RoleService {
         return saveRole;
     }
 
+    @Transactional
     @Override
     public void deleteUsersWithIds(List<Integer> ids) {
+        List<Integer> deleteRoleMenuIds = new ArrayList<>();
+
+        for (Integer roleId : ids) {
+            List<Integer> addList = roleMenuRepository.findByRoleId(roleId).stream().map(RoleMenu::getId).collect(Collectors.toList());
+            deleteRoleMenuIds.addAll(addList);
+        }
+
+        if (!CollectionUtils.isEmpty(deleteRoleMenuIds)) {
+            roleMenuRepository.deleteRoleMenuWithIds(deleteRoleMenuIds);
+        }
+
         roleRepository.deleteRoleWithIds(ids);
     }
 }

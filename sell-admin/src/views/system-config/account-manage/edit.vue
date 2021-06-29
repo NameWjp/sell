@@ -53,6 +53,9 @@ export default {
         roleIds: [
           { required: true, message: '角色不能为空' },
         ],
+        organId: [
+          { required: true, message: '组织机构不能为空' },
+        ],
       },
     };
   },

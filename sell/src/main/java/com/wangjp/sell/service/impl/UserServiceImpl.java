@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,8 +75,20 @@ public class UserServiceImpl implements UserService {
         return saveUser;
     }
 
+    @Transactional
     @Override
     public void deleteUsersWithIds(List<Integer> ids) {
+        List<Integer> deleteUserRoleIds = new ArrayList<>();
+
+        for (Integer userId : ids) {
+            List<Integer> addList = userRoleRepository.findByUserId(userId).stream().map(UserRole::getId).collect(Collectors.toList());
+            deleteUserRoleIds.addAll(addList);
+        }
+
+        if (!CollectionUtils.isEmpty(deleteUserRoleIds)) {
+            userRoleRepository.deleteUserRoleWithIds(deleteUserRoleIds);
+        }
+
         userRepository.deleteUsersWithIds(ids);
     }
 }
