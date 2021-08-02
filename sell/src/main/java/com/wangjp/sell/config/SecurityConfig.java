@@ -21,12 +21,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                // 关闭 csrf 防御，否则前端需要携带自动生产的 token
+                .csrf().disable()
+                // 关闭不能通过 iframe 引用的限制
+                .headers().frameOptions().disable()
+                .and();
+        http
+                .authorizeRequests()
                 .antMatchers("/**")
                 .permitAll()
+                // 其他接口需要登录后才能访问
                 .anyRequest()
                 .authenticated()
-                .and().csrf().disable();
+                .and();
     }
 
     /*

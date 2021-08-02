@@ -24,7 +24,7 @@
       </my-form-item>
       <template slot="control">
         <el-button @click="handleBack">返回</el-button>
-        <loading-btn type="primary" @click="handleSubmit">保存</loading-btn>
+        <loading-btn v-if="showControl" type="primary" @click="handleSubmit">保存</loading-btn>
         <loading-btn v-if="isAdd" type="primary" @click="handleSubmitNotBack">保存不返回</loading-btn>
       </template>
     </my-form>
@@ -69,6 +69,9 @@ export default {
     };
   },
   computed: {
+    showControl() {
+      return this.isAdd || this.isEdit;
+    },
     isAdd() {
       return this.type === 'add';
     },

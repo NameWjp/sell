@@ -22,7 +22,7 @@
             <el-col :span="20">
               <div class="form-control">
                 <el-button @click="handleBack">返回</el-button>
-                <loading-btn type="primary" @click="handleSubmit">保存</loading-btn>
+                <loading-btn v-if="showControl" type="primary" @click="handleSubmit">保存</loading-btn>
               </div>
             </el-col>
           </el-row>
@@ -76,6 +76,9 @@ export default {
     };
   },
   computed: {
+    showControl() {
+      return this.isAdd || this.isEdit;
+    },
     isAdd() {
       return this.type === 'add';
     },

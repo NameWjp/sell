@@ -8,14 +8,14 @@
         <dict-select v-model="submitForm.isEnable" :disabled="isView" dict-code="is_enable" />
       </my-form-item>
       <my-form-item label="角色" prop="roleIds">
-        <list-select v-model="submitForm.roleIds" multiple :list-request="getRoleList" />
+        <list-select v-model="submitForm.roleIds" :disabled="isView" multiple :list-request="getRoleList" />
       </my-form-item>
       <my-form-item label="组织机构" prop="organId">
-        <organ-tree-select v-model="submitForm.organId" />
+        <organ-tree-select v-model="submitForm.organId" :disabled="isView" />
       </my-form-item>
       <template slot="control">
         <el-button @click="handleBack">返回</el-button>
-        <loading-btn type="primary" @click="handleSubmit">保存</loading-btn>
+        <loading-btn v-if="showControl" type="primary" @click="handleSubmit">保存</loading-btn>
       </template>
     </my-form>
   </div>
@@ -60,6 +60,9 @@ export default {
     };
   },
   computed: {
+    showControl() {
+      return this.isAdd || this.isEdit;
+    },
     isAdd() {
       return this.type === 'add';
     },
