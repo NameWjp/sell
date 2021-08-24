@@ -57,6 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
     }
 
+    /**
+     * 放行所有不需要登录就可以访问的请求
+     * 也可以在 {@link #configure(HttpSecurity)} 中配置
+     * 例如 {@code http.authorizeRequests().antMatchers("/api/auth/**").permitAll()}
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         WebSecurity.IgnoredRequestConfigurer ignoring = web.ignoring();
