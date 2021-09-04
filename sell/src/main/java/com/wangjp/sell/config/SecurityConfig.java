@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 /**
  * @author wangjp
@@ -28,6 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomConfig customConfig;
 
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -44,8 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 认证请求
                 .authorizeRequests()
                 // 所有请求都需要登录访问
-                .anyRequest()
-                .authenticated()
+                .anyRequest().authenticated()
                 // RBAC 动态 url 认证（access 指定具体执行的方法，需要在 spring 容器中）
                 // .anyRequest()
                 // .access("@rbacAuthorityService.hasPermission(request,authentication)")
@@ -54,7 +61,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 登出行为自定义
                 .logout().disable()
                 // 关闭默认 session 管理
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+
+                // 异常处理
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(authenticationEntryPoint);
     }
 
     /**

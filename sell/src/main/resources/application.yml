@@ -22,4 +22,7 @@ custom:
         - "/auth/logout"
       # 需要放行的请求，不限方法
       pattern:
-        - "/open/*"
+        # swagger 放行
+        - "/swagger-ui/**"
+        - "/swagger-resources/**"
+        - "/v3/**"
