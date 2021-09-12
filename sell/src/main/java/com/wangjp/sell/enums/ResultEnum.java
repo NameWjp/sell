@@ -68,6 +68,10 @@ public enum ResultEnum {
     ORGAN_ID_NOT_EMPTY(83, "组织机构id不能为空"),
 
     ORGAN_DELETE_EXIST_CHILDREN(84, "删除的菜单存在子节点"),
+
+    AUTH_USER_NOT_EXIST(91, "用户不存在"),
+
+    AUTH_PASSWORD_ERROR(92, "密码错误"),
     ;
 
     private Integer code;

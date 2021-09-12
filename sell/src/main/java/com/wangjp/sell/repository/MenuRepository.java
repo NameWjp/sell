@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer>, JpaSpecifi
     @Modifying
     @Query("delete from Menu where id in ?1")
     void deleteMenuWithIds(List<Integer> ids);
+
+    @Query(value = "select distinct menu.* from menu,role,role_menu where role.id = role_menu.role_id and menu.id = role_menu.menu_id and role.id in (:ids)", nativeQuery = true)
+    List<Menu> selectByRoleIds(@Param("ids") List<Integer> ids);
 }
