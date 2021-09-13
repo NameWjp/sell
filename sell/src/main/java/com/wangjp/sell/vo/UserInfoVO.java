@@ -2,7 +2,6 @@ package com.wangjp.sell.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wangjp.sell.entity.Menu;
-import com.wangjp.sell.entity.Role;
 import com.wangjp.sell.entity.User;
 import com.wangjp.sell.enums.IsEnableEnum;
 import lombok.AllArgsConstructor;
@@ -26,11 +25,11 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfo implements UserDetails {
+public class UserInfoVO implements UserDetails {
 
-    public static UserInfo create(User user, List<Integer> roleIds, List<Menu> menus) {
+    public static UserInfoVO create(User user, List<Integer> roleIds, List<Menu> menus) {
         List<GrantedAuthority> authorities = menus.stream().map(menu -> new SimpleGrantedAuthority(menu.getCode())).collect(Collectors.toList());
-        return new UserInfo(user.getId(), user.getUsername(), user.getPassword(), user.getOrganId(), user.getIsEnable(), user.getCreateTime(), roleIds, authorities);
+        return new UserInfoVO(user.getId(), user.getUsername(), user.getPassword(), user.getOrganId(), user.getIsEnable(), user.getCreateTime(), roleIds, authorities);
     }
 
     private Integer id;

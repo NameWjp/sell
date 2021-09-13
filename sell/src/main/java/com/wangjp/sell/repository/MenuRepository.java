@@ -27,6 +27,6 @@ public interface MenuRepository extends JpaRepository<Menu, Integer>, JpaSpecifi
     @Query("delete from Menu where id in ?1")
     void deleteMenuWithIds(List<Integer> ids);
 
-    @Query(value = "select distinct menu.* from menu,role,role_menu where role.id = role_menu.role_id and menu.id = role_menu.menu_id and role.id in (:ids)", nativeQuery = true)
+    @Query(value = "select distinct menu.* from menu,role_menu where menu.id = role_menu.menu_id and role_menu.role_id in (:ids)", nativeQuery = true)
     List<Menu> selectByRoleIds(@Param("ids") List<Integer> ids);
 }

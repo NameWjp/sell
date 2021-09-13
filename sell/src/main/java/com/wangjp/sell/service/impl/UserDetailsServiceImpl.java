@@ -4,7 +4,7 @@ import com.wangjp.sell.entity.*;
 import com.wangjp.sell.repository.MenuRepository;
 import com.wangjp.sell.repository.UserRepository;
 import com.wangjp.sell.repository.UserRoleRepository;
-import com.wangjp.sell.vo.UserInfo;
+import com.wangjp.sell.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,6 +37,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username);
         List<Integer> roleIds = userRoleRepository.findByUserId(user.getId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
         List<Menu> menus = menuRepository.selectByRoleIds(roleIds);
-        return UserInfo.create(user, roleIds, menus);
+        return UserInfoVO.create(user, roleIds, menus);
     }
 }
