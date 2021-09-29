@@ -7,11 +7,26 @@ spring:
     url: jdbc:mysql://47.98.163.77:3306/sell?serverTimezone=Asia/Shanghai
   jpa:
     show-sql: true
+  redis:
+    host: localhost
+    port: 6379
+    # 连接超时时间
+    timeout: 10000ms
 server:
   servlet:
     # 配置项目公共前缀
     context-path: /sell
   port: 8888
+jwt:
+  config:
+    # JWT 加解密使用的密钥
+    secret: sell-app-my-secret-username-wangjp
+    # 过期时间(60*60*24)
+    expiration: 86400
+    # jwt存储的请求头
+    token-header: Authorization
+    # jwt 负载前缀
+    token-prefix: Bearer
 # 自定义的一些配置，用于 spring-security
 custom:
   config:
