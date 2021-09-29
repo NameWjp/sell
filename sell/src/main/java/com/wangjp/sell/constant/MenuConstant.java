@@ -8,5 +8,5 @@ package com.wangjp.sell.constant;
  */
 public class MenuConstant {
 
-    public static Integer rootParentId = 0;
+    public static final Integer rootParentId = 0;
 }

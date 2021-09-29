@@ -8,8 +8,8 @@ package com.wangjp.sell.constant;
  */
 public class DictConstant {
 
-    public static Integer rootParentId = 0;
+    public static final Integer rootParentId = 0;
 
     // 子树展示前两级
-    public static Integer subTreeShowLevel = 2;
+    public static final Integer subTreeShowLevel = 2;
 }
