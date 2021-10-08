@@ -19,8 +19,7 @@ router.beforeEach(async (to, from, next) => {
   document.title = getPageTitle(to.meta.title);
 
   // determine whether the user has logged in
-  // const hasToken = getToken();
-  const hasToken = true;
+  const hasToken = getToken();
 
   if (hasToken) {
     if (to.path === '/login') {
@@ -33,31 +32,30 @@ router.beforeEach(async (to, from, next) => {
       } else {
         try {
           // get user info
-          // const { roles } = await store.dispatch('user/getInfo');
+          const userInfo = await store.dispatch('user/getInfo');
 
-          // if (roles.length) {
-          //   // generate accessible routes map based on roles
-          //   const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
+          if (userInfo) {
+            const { roles } = userInfo;
+            if (roles && roles.length) {
+              store.dispatch('dict/loadDictList', true);
+              store.dispatch('organization/loadOrganizationTree', true);
+              // generate accessible routes map based on roles
+              const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
 
-          //   // 添加router前重置掉之前的router
-          //   resetRouter();
-          //   router.addRoutes(accessRoutes);
+              // 添加router前重置掉之前的router
+              resetRouter();
+              router.addRoutes(accessRoutes);
 
-          //   // hack method to ensure that addRoutes is complete
-          //   // set the replace: true, so the navigation will not leave a history record
-          //   next({ path: to.fullPath, replace: true });
-          // } else {
-          //   store.dispatch('user/resetToken');
-          //   Message.warning('该账号未分配角色，请联系管理员分配角色');
-          // }
-          // 模拟权限
-          store.commit('user/SET_ROLES', ['test']);
-          store.dispatch('dict/loadDictList', true);
-          store.dispatch('organization/loadOrganizationTree', true);
-          const accessRoutes = await store.dispatch('permission/generateRoutes', ['test']);
-          resetRouter();
-          router.addRoutes(accessRoutes);
-          next({ path: to.fullPath, replace: true });
+              // hack method to ensure that addRoutes is complete
+              // set the replace: true, so the navigation will not leave a history record
+              next({ path: to.fullPath, replace: true });
+            } else {
+              store.dispatch('user/resetToken');
+              Message.warning('该账号未分配角色，请联系管理员分配角色');
+            }
+          } else {
+            next(`/login?redirect=${to.fullPath}`);
+          }
         } catch (error) {
           console.error(error);
           NProgress.done();

@@ -23,4 +23,6 @@ public interface RoleRepository extends JpaRepository<Role, Integer>, JpaSpecifi
     @Modifying
     @Query("delete from Role where id in ?1")
     void deleteRoleWithIds(List<Integer> ids);
+
+    List<Role> findByIdIn(List<Integer> ids);
 }

@@ -1,4 +1,4 @@
-import { login, getUserInfo, logout, refreshToken } from '@/api/login';
+import { login, getUserInfo, logout, refreshToken } from '@/api/auth';
 import { setToken, clearToken } from '@/utils/request';
 
 // 过滤按钮 type: 2为按钮 1为菜单
@@ -22,52 +22,8 @@ function filterMenuTree(menus) {
 const state = {
   name: 'test',
   roles: [],
-  userInfo: {
-    privilegeList: [
-      { url: '/system-config' },
-      { url: '/system-config/account-manage' },
-      { url: '/system-config/dict-manage' },
-      { url: '/system-config/role-manage' },
-      { url: '/system-config/menu-manage' },
-      { url: '/system-config/organ-manage' },
-    ],
-  },
-  menuTree: [
-    {
-      name: '首页',
-      icon: 'dashboard',
-      url: '/dashboard',
-      code: '/dashboard',
-    },
-    {
-      name: '系统配置',
-      icon: 'setting',
-      url: '/system-config',
-      code: 'system-config',
-      children: [
-        {
-          name: '账户管理',
-          url: '/system-config/account-manage',
-        },
-        {
-          name: '字典管理',
-          url: '/system-config/dict-manage',
-        },
-        {
-          name: '角色管理',
-          url: '/system-config/role-manage',
-        },
-        {
-          name: '菜单管理',
-          url: '/system-config/menu-manage',
-        },
-        {
-          name: '组织机构管理',
-          url: '/system-config/organ-manage',
-        },
-      ],
-    },
-  ],
+  userInfo: {},
+  menuTree: [],
 };
 
 const mutations = {
@@ -90,7 +46,7 @@ const actions = {
     const { username, password } = userInfo;
     try {
       const { data: { token: str, expiredDate } = {} } = await login({ username: username.trim(), password });
-      const token = `Bearer${str}`;
+      const token = `Bearer ${str}`;
       if (token) {
         setToken(token, expiredDate);
         return token;
@@ -102,14 +58,17 @@ const actions = {
   },
 
   async getInfo({ commit }) {
-    const { data: userInfo = [] } = await getUserInfo();
-    const { username = '', privilegeList = [], privilegeTreeList = [] } = userInfo;
-    const roles = (privilegeList || []).map(item => item.code);
-    commit('SET_USER_INFO', userInfo);
-    commit('SET_ROLES', roles);
-    commit('SET_NAME', username);
-    commit('SET_MENU_TREE', filterMenuTree(privilegeTreeList));
-    return { roles };
+    const { data: userInfo } = await getUserInfo();
+    if (userInfo) {
+      const { username = '', privilegeList = [], privilegeTreeList = [] } = userInfo;
+      const roles = (privilegeList || []).map(item => item.code);
+      commit('SET_USER_INFO', userInfo);
+      commit('SET_ROLES', roles);
+      commit('SET_NAME', username);
+      commit('SET_MENU_TREE', filterMenuTree(privilegeTreeList));
+      return { roles };
+    }
+    return null;
   },
 
   async logout({ dispatch }) {
@@ -119,7 +78,7 @@ const actions = {
 
   async refreshToken() {
     const { data: { token: str, expiredDate } = {} } = await refreshToken();
-    const token = `Bearer${str}`;
+    const token = `Bearer ${str}`;
     setToken(token, expiredDate);
   },
 

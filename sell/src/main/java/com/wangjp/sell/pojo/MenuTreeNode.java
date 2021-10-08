@@ -2,6 +2,7 @@ package com.wangjp.sell.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @detail
  */
 @Data
-public class MenuTreeNode {
+public class MenuTreeNode implements Serializable {
 
     private Integer id;
 

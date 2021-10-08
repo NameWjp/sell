@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
  */
 @EnableConfigurationProperties(JwtConfig.class)
 @Configuration
-@Component
 public class JwtTokenUtil {
 
     @Autowired
@@ -52,6 +51,13 @@ public class JwtTokenUtil {
         redisTemplate.opsForValue().set(getRedisKeyFromToken(token), userDetails, jwtConfig.getExpiration(), TimeUnit.SECONDS);
 
         return token;
+    }
+
+    /**
+     * 删除 jwt
+     */
+    public void destroyJwt(String token) {
+        redisTemplate.delete(getRedisKeyFromToken(token));
     }
 
     /**

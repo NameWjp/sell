@@ -1,6 +1,6 @@
 <template>
   <section ref="appMain" class="app-main">
-    <div class="container">
+    <div v-if="isInit" class="container">
       <transition name="fade-transform" mode="out-in">
         <!-- <keep-alive :include="cachedViews"> -->
         <router-view :key="key" />
@@ -11,15 +11,24 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 
 export default {
   name: 'AppMain',
   computed: {
+    ...mapState({
+      organizationTree: state => state.organization.organizationTree,
+      dictList: state => state.dict.dictList,
+    }),
     cachedViews() {
       return this.$store.state.tagsView.cachedViews;
     },
     key() {
       return this.$route.path;
+    },
+    // 确保系统需要的公共参数加载完毕
+    isInit() {
+      return this.organizationTree.length && this.dictList.length;
     },
   },
 };

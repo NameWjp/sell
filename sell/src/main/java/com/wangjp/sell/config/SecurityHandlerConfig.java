@@ -25,6 +25,6 @@ public class SecurityHandlerConfig {
     // 匿名访问时的异常
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (httpServletRequest, httpServletResponse, e) -> ResponseUtil.renderJson(httpServletResponse, ResultVOUtil.error(403, "用户未登录"));
+        return (httpServletRequest, httpServletResponse, e) -> ResponseUtil.renderJson(httpServletResponse, ResultVOUtil.error(401, "用户未登录"));
     }
 }

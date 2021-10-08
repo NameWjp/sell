@@ -6,28 +6,21 @@
         <el-row :gutter="SL.gutter">
           <el-col v-bind="SL.span">
             <el-form-item label="账号">
-              <el-input v-model="form.userNumber" disabled />
+              <el-input v-model="form.username" disabled />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="SL.gutter">
           <el-col v-bind="SL.span">
             <el-form-item label="所属部门">
-              <el-input v-model="form.code" disabled />
+              <el-input v-model="form.organName" disabled />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="SL.gutter">
           <el-col v-bind="SL.span">
             <el-form-item label="所属角色">
-              <el-input v-model="form.role" disabled />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="SL.gutter">
-          <el-col v-bind="SL.span">
-            <el-form-item label="用户名称">
-              <el-input v-model="form.name" disabled />
+              <el-input v-model="form.roleNames" disabled />
             </el-form-item>
           </el-col>
         </el-row>
@@ -107,7 +100,9 @@ export default {
     };
     return {
       form: {
-        userNumber: '',
+        username: '',
+        organName: '',
+        roleNames: '',
         oldPassword: '',
         password: '',
         validatePass: '',
@@ -120,12 +115,11 @@ export default {
     };
   },
   created() {
-    const { code, name, role, userNumber } = this.$store.state.user.userInfo;
+    const { username, organName, roleNames } = this.$store.state.user.userInfo;
     this.form = {
-      code,
-      name,
-      role: role,
-      userNumber,
+      username,
+      organName,
+      roleNames,
     };
   },
   methods: {

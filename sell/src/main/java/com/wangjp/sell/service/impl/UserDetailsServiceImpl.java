@@ -1,9 +1,7 @@
 package com.wangjp.sell.service.impl;
 
 import com.wangjp.sell.entity.*;
-import com.wangjp.sell.repository.MenuRepository;
-import com.wangjp.sell.repository.UserRepository;
-import com.wangjp.sell.repository.UserRoleRepository;
+import com.wangjp.sell.repository.*;
 import com.wangjp.sell.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,11 +30,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     MenuRepository menuRepository;
 
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    OrganRepository organRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         List<Integer> roleIds = userRoleRepository.findByUserId(user.getId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        List<Role> roles = roleRepository.findByIdIn(roleIds);
         List<Menu> menus = menuRepository.selectByRoleIds(roleIds);
-        return UserInfoVO.create(user, roleIds, menus);
+        Organ organ = organRepository.findById(user.getOrganId()).orElse(null);
+        return UserInfoVO.create(user, roles, organ, menus);
     }
 }

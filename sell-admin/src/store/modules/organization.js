@@ -2,8 +2,8 @@ import { getOrganTree } from '@/api/organ';
 import { flattenTree } from '@/utils/tree';
 
 const state = {
-  organizationTree: [{ name: '测试组织机构', id: 0 }],
-  organizationMap: { 0: { name: '测试组织机构', id: 0 } },
+  organizationTree: [],
+  organizationMap: {},
 };
 
 const mutations = {
