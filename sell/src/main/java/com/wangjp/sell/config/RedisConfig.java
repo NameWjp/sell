@@ -36,6 +36,7 @@ public class RedisConfig {
         // 指定要序列化的域，field，get 和 set。以及修饰符范围，ANY是都有包括 private 和 public
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         // 这一句非常的重要，作用是序列化时将对象全类名一起保存下来，不然无法直接反序列化
+        // 但这样有一个缺陷，如果类的位置变化了会导致无法反序列化，考虑到 redis 储存的信息不太重要，为了方便暂时这样做
         objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
 
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
