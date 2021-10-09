@@ -35,6 +35,10 @@ public enum ResultEnum {
 
     USER_USERNAME_ALREADY_EXIST(44, "用户名称已存在"),
 
+    USER_OLD_PASSWORD_ERROR(45, "旧密码错误"),
+
+    USER_ADMIN_UNABLE_DELETE(46, "管理员不能删除"),
+
     DICT_NOT_EXIST(51, "字典不存在"),
 
     DICT_PARENT_ID_NOT_EXIST(52, "字典父节点不存在"),

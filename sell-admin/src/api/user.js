@@ -23,3 +23,7 @@ export async function getUserList(pagination, params) {
   });
   return obj2Pagination(data);
 }
+
+export function updatePassword(data) {
+  return post('/user/updatePassword', data);
+}

@@ -9,12 +9,16 @@ import com.wangjp.sell.entity.User;
 import com.wangjp.sell.entity.UserRole;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
+import com.wangjp.sell.form.UpdatePasswordForm;
 import com.wangjp.sell.form.UserForm;
 import com.wangjp.sell.groups.Update;
 import com.wangjp.sell.service.OrganService;
 import com.wangjp.sell.service.UserRoleService;
 import com.wangjp.sell.service.UserService;
+import com.wangjp.sell.utils.ContextUtil;
+import com.wangjp.sell.utils.JwtTokenUtil;
 import com.wangjp.sell.utils.ResultVOUtil;
+import com.wangjp.sell.utils.UserUtil;
 import com.wangjp.sell.vo.PaginationVO;
 import com.wangjp.sell.vo.ResultVO;
 import com.wangjp.sell.vo.UserRoleVO;
@@ -64,6 +68,9 @@ public class UserController {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @ApiOperation("创建用户")
     @PostMapping("/create")
@@ -123,6 +130,10 @@ public class UserController {
     @ApiOperation("删除用户")
     @PostMapping("/delete")
     public ResultVO<Object> delete(@RequestBody List<Integer> ids) {
+        Integer adminId = userService.findByUsername(UserConstant.adminName).getId();
+        if (ids.contains(adminId)) {
+            throw new SellException(ResultEnum.USER_ADMIN_UNABLE_DELETE);
+        }
         if (CollectionUtils.isEmpty(ids)) {
             log.error("【删除用户】id不能为空");
             throw new SellException(ResultEnum.USER_ID_NOT_EMPTY);
@@ -161,5 +172,25 @@ public class UserController {
         Page<UserVO> userVOPage = userPage.map(user -> User2UserVOConverter.convert(user, organList));
 
        return ResultVOUtil.success(Page2PaginationVOConverter.convert(userVOPage));
+    }
+
+    @ApiOperation("修改密码")
+    @PostMapping("/updatePassword")
+    public ResultVO<Object> updatePassword(@RequestBody @Validated UpdatePasswordForm updatePasswordForm) {
+        Integer id = UserUtil.getCurrentUserId();
+        User user = userService.findById(id);
+        List<Integer> roleIds = userRoleService.findByUserId(id).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+
+        if (user == null) {
+            throw new SellException(ResultEnum.USER_NOT_FIND);
+        }
+        if (!bCryptPasswordEncoder.matches(updatePasswordForm.getOldPassword(), user.getPassword())) {
+            throw new SellException(ResultEnum.USER_OLD_PASSWORD_ERROR);
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(updatePasswordForm.getNewPassword()));
+        userService.save(user, roleIds);
+
+        return ResultVOUtil.success();
     }
 }

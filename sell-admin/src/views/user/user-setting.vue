@@ -36,8 +36,8 @@
         <div class="title">修改密码</div>
         <el-row :gutter="SL.gutter">
           <el-col v-bind="SL.span">
-            <el-form-item label="账号" required="">
-              <el-input v-model="form.userNumber" disabled />
+            <el-form-item label="账号" required>
+              <el-input v-model="form.username" disabled />
             </el-form-item>
           </el-col>
         </el-row>
@@ -77,6 +77,7 @@
 
 <script>
 import { SL } from '@/utils/form-layout';
+import { updatePassword } from '@/api/user';
 
 export default {
   name: 'UserSetting',
@@ -134,12 +135,12 @@ export default {
     },
     handleSubmit() {
       this.$refs.form.validate(async (valid) => {
-        // if (!valid) return;
-        // const { oldPassword, password } = this.form;
-        // const { code } = await editPassword({ oldPassword, newPassword: password });
-        // if (code === 200) {
-        //   this.$message.success('修改成功');
-        // }
+        if (!valid) return;
+        const { oldPassword, password } = this.form;
+        const { code } = await updatePassword({ oldPassword, newPassword: password });
+        if (code === 200) {
+          this.$message.success('修改成功');
+        }
       });
     },
   },
