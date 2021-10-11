@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,7 @@ public class MenuController {
 
     @ApiOperation("创建菜单")
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('menu:create')")
     public ResultVO<Object> create(@RequestBody @Validated MenuForm menuForm) {
         Menu preMenu = menuService.findByCode(menuForm.getCode());
         if (preMenu != null) {
@@ -87,6 +89,7 @@ public class MenuController {
 
     @ApiOperation("删除菜单")
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('menu:delete')")
     public ResultVO<Object> delete(@RequestBody List<Integer> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             log.error("【删除菜单】id不能为空");
@@ -105,6 +108,7 @@ public class MenuController {
 
     @ApiOperation("修改菜单")
     @PostMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('menu:update')")
     public ResultVO<Object> update(@PathVariable("id") Integer id, @RequestBody @Validated(Update.class) MenuForm menuForm) {
         Menu menu = menuService.findById(id);
         if (menu == null) {

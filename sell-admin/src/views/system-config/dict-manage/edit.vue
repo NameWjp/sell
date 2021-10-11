@@ -118,8 +118,6 @@ export default {
     },
     async handleSubmitNotBack() {
       await this.handleSubmit(false);
-      this.submitForm.dictName = null;
-      this.submitForm.dictValue = null;
     },
     async handleSubmit(needBack = true) {
       const valid = this.$refs.form.validate();

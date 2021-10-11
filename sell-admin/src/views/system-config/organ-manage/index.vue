@@ -5,8 +5,8 @@
     </div>
     <div class="main-layout">
       <div class="page-control">
-        <el-button type="primary" icon="el-icon-plus" @click="handleToEdit('add')">新增</el-button>
-        <el-button type="danger" icon="el-icon-delete" :disabled="!selectedRows.length" @click="handleDeleteByRows(selectedRows)">删除</el-button>
+        <el-button v-permission="'organ:create'" type="primary" icon="el-icon-plus" @click="handleToEdit('add')">新增</el-button>
+        <el-button v-permission="'organ:delete'" type="danger" icon="el-icon-delete" :disabled="!selectedRows.length" @click="handleDeleteByRows(selectedRows)">删除</el-button>
       </div>
       <div class="query-form">
         <my-form :model="queryForm" @query="handleQuery">
@@ -41,8 +41,8 @@
         >
           <template #default="{ row }">
             <el-button type="text" @click="handleToEdit('view', row)">查看</el-button>
-            <el-button type="text" @click="handleToEdit('edit', row)">编辑</el-button>
-            <el-button type="text" @click="handleDeleteByRows([row])">删除</el-button>
+            <el-button v-permission="'organ:update'" type="text" @click="handleToEdit('edit', row)">编辑</el-button>
+            <el-button v-permission="'organ:delete'" type="text" @click="handleDeleteByRows([row])">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

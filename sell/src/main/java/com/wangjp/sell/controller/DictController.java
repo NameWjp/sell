@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,7 @@ public class DictController {
 
     @ApiOperation("创建字典")
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('dict:create')")
     public ResultVO<Object> create(@RequestBody @Validated DictForm dictForm) {
         Integer parentId = dictForm.getParentId();
         String parentIds;
@@ -82,6 +84,7 @@ public class DictController {
 
     @ApiOperation("修改字典")
     @PostMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('dict:update')")
     public ResultVO<Object> update(@PathVariable("id") Integer id, @RequestBody @Validated(Update.class) DictForm dictForm) {
         Dict dict = dictService.findById(id);
         if (dict == null) {
@@ -98,6 +101,7 @@ public class DictController {
 
     @ApiOperation("删除字典")
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('dict:delete')")
     public ResultVO<Object> delete(@RequestBody List<Integer> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             log.error("【删除字典】id不能为空");

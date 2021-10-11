@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,7 @@ public class RoleController {
 
     @ApiOperation("创建角色")
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('role:create')")
     public ResultVO<Object> create(@RequestBody @Validated RoleForm roleForm) {
         Role preRole = roleService.findByName(roleForm.getName());
         if (preRole != null) {
@@ -71,6 +73,7 @@ public class RoleController {
 
     @ApiOperation("修改角色")
     @PostMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('role:update')")
     public ResultVO<Object> update(@PathVariable("id") Integer id, @RequestBody @Validated(Update.class) RoleForm roleForm) {
         Role role = roleService.findById(id);
         if (role == null) {
@@ -110,6 +113,7 @@ public class RoleController {
 
     @ApiOperation("删除角色")
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('role:delete')")
     public ResultVO<Object> delete(@RequestBody List<Integer> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             log.error("【删除角色】id不能为空");

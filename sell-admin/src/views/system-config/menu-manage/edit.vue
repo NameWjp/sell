@@ -108,8 +108,6 @@ export default {
     },
     async handleSubmitNotBack() {
       await this.handleSubmit(false);
-      this.submitForm.name = null;
-      this.submitForm.code = null;
     },
     async handleSubmit(needBack = true) {
       const valid = this.$refs.form.validate();

@@ -15,8 +15,6 @@ import com.wangjp.sell.groups.Update;
 import com.wangjp.sell.service.OrganService;
 import com.wangjp.sell.service.UserRoleService;
 import com.wangjp.sell.service.UserService;
-import com.wangjp.sell.utils.ContextUtil;
-import com.wangjp.sell.utils.JwtTokenUtil;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.utils.UserUtil;
 import com.wangjp.sell.vo.PaginationVO;
@@ -32,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
@@ -69,11 +68,9 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
     @ApiOperation("创建用户")
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('user:create')")
     public ResultVO<Object> create(@RequestBody @Validated UserForm userForm) {
         User preUser = userService.findByUsername(userForm.getUsername());
         if (preUser != null) {
@@ -91,6 +88,7 @@ public class UserController {
 
     @ApiOperation("修改用户")
     @PostMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('user:update')")
     public ResultVO<Object> update(@PathVariable("id") Integer id, @RequestBody @Validated(Update.class) UserForm userForm) {
         User user = userService.findById(id);
         if (user == null) {
@@ -129,6 +127,7 @@ public class UserController {
 
     @ApiOperation("删除用户")
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('user:delete')")
     public ResultVO<Object> delete(@RequestBody List<Integer> ids) {
         Integer adminId = userService.findByUsername(UserConstant.adminName).getId();
         if (ids.contains(adminId)) {

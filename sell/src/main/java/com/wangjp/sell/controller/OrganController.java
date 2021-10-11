@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,7 @@ public class OrganController {
 
     @ApiOperation("创建组织机构")
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('organ:create')")
     public ResultVO<Object> create(@RequestBody @Validated OrganForm organForm) {
         Integer parentId = organForm.getParentId();
         if (parentId == null) {
@@ -80,6 +82,7 @@ public class OrganController {
 
     @ApiOperation("修改组织机构")
     @PostMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('organ:update')")
     public ResultVO<Object> update(@PathVariable("id") Integer id, @RequestBody @Validated(Update.class) OrganForm organForm) {
         Organ organ = organService.findById(id);
         if (organ == null) {
@@ -108,6 +111,7 @@ public class OrganController {
 
     @ApiOperation("删除组织机构")
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('organ:delete')")
     public ResultVO<Object> delete(@RequestBody List<Integer> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             log.error("【删除组织机构】id不能为空");
