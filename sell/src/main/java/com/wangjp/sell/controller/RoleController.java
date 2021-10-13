@@ -2,16 +2,21 @@ package com.wangjp.sell.controller;
 
 import com.wangjp.sell.converter.Page2PaginationVOConverter;
 import com.wangjp.sell.converter.Role2RoleVOConverter;
+import com.wangjp.sell.entity.Organ;
 import com.wangjp.sell.entity.Role;
 import com.wangjp.sell.entity.RoleMenu;
+import com.wangjp.sell.entity.User;
 import com.wangjp.sell.enums.ResultEnum;
 import com.wangjp.sell.exception.SellException;
 import com.wangjp.sell.form.RoleForm;
 import com.wangjp.sell.groups.Update;
+import com.wangjp.sell.service.OrganService;
 import com.wangjp.sell.service.RoleMenuService;
 import com.wangjp.sell.service.RoleService;
+import com.wangjp.sell.service.UserService;
 import com.wangjp.sell.utils.PaginationUtil;
 import com.wangjp.sell.utils.ResultVOUtil;
+import com.wangjp.sell.utils.UserUtil;
 import com.wangjp.sell.vo.PaginationVO;
 import com.wangjp.sell.vo.ResultVO;
 import com.wangjp.sell.vo.RoleVO;
@@ -55,6 +60,12 @@ public class RoleController {
     @Autowired
     RoleMenuService roleMenuService;
 
+    @Autowired
+    OrganService organService;
+
+    @Autowired
+    UserService userService;
+
     @ApiOperation("创建角色")
     @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('role:create')")
@@ -67,6 +78,7 @@ public class RoleController {
         Role role = new Role();
         role.setName(roleForm.getName());
         role.setDescription(roleForm.getDescription());
+        role.setCreateId(UserUtil.getCurrentUserId());
         roleService.save(role, roleForm.getPrivilegeIds());
         return ResultVOUtil.success();
     }
@@ -130,6 +142,10 @@ public class RoleController {
             @RequestParam Integer pageNum,
             @RequestParam(required = false) String name
     ) {
+        Integer organId = UserUtil.getCurrentUserInfoVO().getOrganId();
+        List<Integer> allOrganId = organService.findSelfAndChildren(organId).stream().map(Organ::getId).collect(Collectors.toList());
+        List<Integer> allUserId = userService.findByOrganIdIn(allOrganId).stream().map(User::getId).collect(Collectors.toList());
+
         PaginationVO<Role> result;
 
         Specification<Role> specification = new Specification<Role>() {
@@ -138,6 +154,9 @@ public class RoleController {
             public Predicate toPredicate(Root<Role> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 //集合 用于封装查询条件
                 List<Predicate> list = new ArrayList<>();
+
+                // 根据创建人过滤数据
+                list.add(root.get("createId").in(allUserId));
 
                 if (!StringUtils.isEmpty(name)) {
                     list.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));

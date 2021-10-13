@@ -32,4 +32,7 @@ public class Role extends AbstractAuditModel {
 
     // 角色描述
     private String description;
+
+    // 创建人id
+    private Integer createId;
 }

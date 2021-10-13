@@ -91,4 +91,9 @@ public class UserServiceImpl implements UserService {
 
         userRepository.deleteUsersWithIds(ids);
     }
+
+    @Override
+    public List<User> findByOrganIdIn(List<Integer> organIds) {
+        return userRepository.findByOrganIdIn(organIds);
+    }
 }

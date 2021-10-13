@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
 
     User findByUsername(String username);
 
+    List<User> findByOrganIdIn(List<Integer> organIds);
+
     @Transactional
     @Modifying
     @Query("delete from User where id in ?1")

@@ -24,4 +24,6 @@ public interface UserService {
     User save(User user, List<Integer> roleIds);
 
     void deleteUsersWithIds(List<Integer> ids);
+
+    List<User> findByOrganIdIn(List<Integer> organIds);
 }
