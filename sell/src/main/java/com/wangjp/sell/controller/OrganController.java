@@ -14,6 +14,7 @@ import com.wangjp.sell.service.OrganService;
 import com.wangjp.sell.utils.PaginationUtil;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.utils.TreeUtil;
+import com.wangjp.sell.utils.UserUtil;
 import com.wangjp.sell.vo.OrganVO;
 import com.wangjp.sell.vo.PaginationVO;
 import com.wangjp.sell.vo.ResultVO;
@@ -136,6 +137,9 @@ public class OrganController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer parentId
     ) {
+        Integer organId = UserUtil.getCurrentUserInfoVO().getOrganId();
+        List<Integer> allOrganId = organService.findSelfAndChildren(organId).stream().map(Organ::getId).collect(Collectors.toList());
+
         PaginationVO<OrganVO> result;
 
         Specification<Organ> specification = new Specification<Organ>() {
@@ -144,6 +148,8 @@ public class OrganController {
             public Predicate toPredicate(Root<Organ> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<>();
 
+                // 根据当前登录用户的组织机构过滤数据
+                list.add(root.get("id").in(allOrganId));
                 if (!StringUtils.isEmpty(name)) {
                     list.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
                 }
@@ -187,7 +193,12 @@ public class OrganController {
     @ApiOperation("获取树结构")
     @GetMapping("/getTree")
     public ResultVO<Collection<OrganTreeNode>> getTree() {
-        List<OrganTreeNode> organTreeNodeList = Organ2OrganTreeNodeConverter.convert(organService.findAll());
+        Integer organId = UserUtil.getCurrentUserInfoVO().getOrganId();
+        List<Integer> allChildrenOrganId = organService.findAllChildren(organId).stream().map(Organ::getId).collect(Collectors.toList());
+        List<Integer> allOrganId = organService.findSelfAndParent(organId).stream().map(Organ::getId).collect(Collectors.toList());
+        allOrganId.addAll(allChildrenOrganId);
+
+        List<OrganTreeNode> organTreeNodeList = Organ2OrganTreeNodeConverter.convert(organService.findByIdIn(allOrganId));
         List<OrganTreeNode> tree = (List<OrganTreeNode>) TreeUtil.list2Tree(organTreeNodeList, OrganTreeNode.class);
         return ResultVOUtil.success(tree);
     }

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -85,6 +86,32 @@ public class OrganServiceImpl implements OrganService {
         for (Organ organ : children) {
             organList.add(organ);
             setChildrenByParentId(organList, organ.getId());
+        }
+    }
+
+    @Override
+    public List<Organ> findSelfAndParent(Integer organId) {
+        Organ organ = repository.findById(organId).orElse(null);
+        List<Organ> organList = findAllParent(organId);
+        organList.add(organ);
+        return organList;
+    }
+
+    @Override
+    public List<Organ> findAllParent(Integer organId) {
+        List<Organ> organList = new ArrayList<>();
+        setParentByOrganId(organList, organId);
+        Collections.reverse(organList);
+        return organList;
+    }
+
+    private void setParentByOrganId(List<Organ> organList, Integer organId) {
+        // 添加所有父元素
+        Organ organ = repository.findById(organId).orElse(null);
+        Organ parent = repository.findById(organ.getParentId()).orElse(null);
+        if (parent != null) {
+            organList.add(parent);
+            setParentByOrganId(organList, parent.getId());
         }
     }
 }

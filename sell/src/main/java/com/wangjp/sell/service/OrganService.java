@@ -34,4 +34,8 @@ public interface OrganService {
     List<Organ> findAllChildren(Integer parentId);
 
     List<Organ> findSelfAndChildren(Integer organId);
+
+    List<Organ> findAllParent(Integer organId);
+
+    List<Organ> findSelfAndParent(Integer organId);
 }
