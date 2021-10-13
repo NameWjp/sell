@@ -12,6 +12,7 @@ import com.wangjp.sell.pojo.MenuTreeNode;
 import com.wangjp.sell.service.MenuService;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.utils.TreeUtil;
+import com.wangjp.sell.utils.UserUtil;
 import com.wangjp.sell.vo.PaginationVO;
 import com.wangjp.sell.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -35,6 +36,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjp
@@ -157,6 +159,8 @@ public class MenuController {
             @RequestParam(required = false) String code,
             @RequestParam(required = false) Integer parentId
     ) {
+        List<String> privilegeCodes = UserUtil.getCurrentUserInfoVO().getPrivilegeList().stream().map(MenuTreeNode::getCode).collect(Collectors.toList());
+
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
         Specification<Menu> specification = new Specification<Menu>() {
@@ -165,6 +169,8 @@ public class MenuController {
             public Predicate toPredicate(Root<Menu> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<>();
 
+                // 根据当前用户的权限code过滤
+                list.add(root.get("code").in(privilegeCodes));
                 if (!StringUtils.isEmpty(name)) {
                     list.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
                 }
@@ -198,9 +204,12 @@ public class MenuController {
     @ApiOperation("获取树结构")
     @GetMapping("/getTree")
     public ResultVO<Collection<MenuTreeNode>> getTree() {
-        List<MenuTreeNode> menuTreeNodeList = Menu2MenuTreeNodeConverter.convert(menuService.findAll());
+        List<String> privilegeCodes = UserUtil.getCurrentUserInfoVO().getPrivilegeList().stream().map(MenuTreeNode::getCode).collect(Collectors.toList());
+
+        List<MenuTreeNode> menuTreeNodeList = Menu2MenuTreeNodeConverter.convert(menuService.findMenuByCodeIn(privilegeCodes));
         List<MenuTreeNode> tree = (List<MenuTreeNode>)TreeUtil.list2Tree(menuTreeNodeList, MenuTreeNode.class);
         TreeUtil.sortTree(tree, MenuTreeNode.class);
+
         return ResultVOUtil.success(tree);
     }
 }

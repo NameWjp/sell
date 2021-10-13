@@ -22,6 +22,8 @@ public interface MenuRepository extends JpaRepository<Menu, Integer>, JpaSpecifi
 
     List<Menu> findByParentId(Integer parentId);
 
+    List<Menu> findMenuByCodeIn(List<String> codes);
+
     @Transactional
     @Modifying
     @Query("delete from Menu where id in ?1")

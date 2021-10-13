@@ -57,4 +57,9 @@ public class MenuServiceImpl implements MenuService {
     public List<Menu> findByParentId(Integer parentId) {
         return repository.findByParentId(parentId);
     }
+
+    @Override
+    public List<Menu> findMenuByCodeIn(List<String> codes) {
+        return repository.findMenuByCodeIn(codes);
+    }
 }

@@ -28,4 +28,6 @@ public interface MenuService {
     void deleteMenuWithIds(List<Integer> ids);
 
     List<Menu> findByParentId(Integer parentId);
+
+    List<Menu> findMenuByCodeIn(List<String> codes);
 }
