@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,5 +62,29 @@ public class OrganServiceImpl implements OrganService {
     @Override
     public List<Organ> findByParentId(Integer parentId) {
         return repository.findByParentId(parentId);
+    }
+
+    @Override
+    public List<Organ> findSelfAndChildren(Integer organId) {
+        Organ organ = repository.findById(organId).orElse(null);
+        List<Organ> organList = findAllChildren(organId);
+        organList.add(0, organ);
+        return organList;
+    }
+
+    @Override
+    public List<Organ> findAllChildren(Integer parentId) {
+        List<Organ> organList = new ArrayList<>();
+        setChildrenByParentId(organList, parentId);
+        return organList;
+    }
+
+    private void setChildrenByParentId(List<Organ> organList, Integer parentId) {
+        // 添加所有子元素
+        List<Organ> children = repository.findByParentId(parentId);
+        for (Organ organ : children) {
+            organList.add(organ);
+            setChildrenByParentId(organList, organ.getId());
+        }
     }
 }

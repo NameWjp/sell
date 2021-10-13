@@ -30,4 +30,8 @@ public interface OrganService {
     void deleteOrganWithIds(List<Integer> ids);
 
     List<Organ> findByParentId(Integer parentId);
+
+    List<Organ> findAllChildren(Integer parentId);
+
+    List<Organ> findSelfAndChildren(Integer organId);
 }

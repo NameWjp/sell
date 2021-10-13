@@ -148,6 +148,9 @@ public class UserController {
             @RequestParam Integer pageNum,
             @RequestParam(required = false) String username
     ) {
+        Integer organId = UserUtil.getCurrentUserInfoVO().getOrganId();
+        List<Integer> allOrganId = organService.findSelfAndChildren(organId).stream().map(Organ::getId).collect(Collectors.toList());
+
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
         Specification<User> specification = new Specification<User>() {
@@ -157,6 +160,10 @@ public class UserController {
                 //集合 用于封装查询条件
                 List<Predicate> list = new ArrayList<>();
 
+                // 根据组织机构过滤
+                list.add(root.get("organId").in(allOrganId));
+
+                // 根据用户姓名过滤
                 if (!StringUtils.isEmpty(username)) {
                     list.add(criteriaBuilder.like(root.get("username"), "%" + username + "%"));
                 }

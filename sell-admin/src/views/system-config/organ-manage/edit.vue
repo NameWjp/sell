@@ -95,6 +95,7 @@ export default {
 
       if (code === 200) {
         this.$message.success(`${this.isAdd ? '新增' : this.isEdit ? '修改' : '操作'}成功`);
+        this.$store.dispatch('organization/loadOrganizationTree', true);
         this.handleBack();
       }
     },
