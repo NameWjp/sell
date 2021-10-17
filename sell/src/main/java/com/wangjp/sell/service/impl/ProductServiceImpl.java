@@ -33,6 +33,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductInfo> findByCategoryCode(String categoryCode) {
+        return repository.findByCategoryCode(categoryCode);
+    }
+
+    @Override
     public List<ProductInfo> findUpAll() {
         return repository.findByProductStatus(ProductStatusEnum.UP.getCode());
     }

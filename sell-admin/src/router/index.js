@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Layout from '@/layout';
 import User from './user';
 import SystemConfig from './system-config';
+import ProductManage from './product-manage';
 
 Vue.use(Router);
 
@@ -76,6 +77,7 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   SystemConfig,
+  ProductManage,
   { path: '*', redirect: '/404', hidden: true },
 ];
 

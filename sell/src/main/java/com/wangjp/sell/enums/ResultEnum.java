@@ -76,6 +76,12 @@ public enum ResultEnum {
     AUTH_USER_NOT_EXIST(91, "用户不存在"),
 
     AUTH_PASSWORD_ERROR(92, "密码错误"),
+
+    CATEGORY_NOT_EXIST(101, "商品类型不存在"),
+
+    CATEGORY_ID_NOT_EMPTY(102, "商品类型id不能为空"),
+
+    CATEGORY_DELETE_EXIST_PRODUCT_INFO(103, "删除的商品类型下存在商品，请先删除商品")
     ;
 
     private Integer code;

@@ -169,8 +169,10 @@ public class MenuController {
             public Predicate toPredicate(Root<Menu> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<>();
 
-                // 根据当前用户的权限code过滤
-                list.add(root.get("code").in(privilegeCodes));
+                // 如果不是管理员，需要根据当前用户的权限code过滤
+                if (!UserUtil.isAdmin()) {
+                    list.add(root.get("code").in(privilegeCodes));
+                }
                 if (!StringUtils.isEmpty(name)) {
                     list.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
                 }
@@ -204,7 +206,13 @@ public class MenuController {
     @ApiOperation("获取树结构")
     @GetMapping("/getTree")
     public ResultVO<Collection<MenuTreeNode>> getTree() {
-        List<String> privilegeCodes = UserUtil.getCurrentUserInfoVO().getPrivilegeList().stream().map(MenuTreeNode::getCode).collect(Collectors.toList());
+        List<String> privilegeCodes;
+
+        if (UserUtil.isAdmin()) {
+            privilegeCodes = menuService.findAll().stream().map(Menu::getCode).collect(Collectors.toList());
+        } else {
+            privilegeCodes = UserUtil.getCurrentUserInfoVO().getPrivilegeList().stream().map(MenuTreeNode::getCode).collect(Collectors.toList());
+        }
 
         List<MenuTreeNode> menuTreeNodeList = Menu2MenuTreeNodeConverter.convert(menuService.findMenuByCodeIn(privilegeCodes));
         List<MenuTreeNode> tree = (List<MenuTreeNode>)TreeUtil.list2Tree(menuTreeNodeList, MenuTreeNode.class);

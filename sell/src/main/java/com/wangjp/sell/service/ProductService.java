@@ -15,6 +15,9 @@ import java.util.List;
  */
 public interface ProductService {
 
+    // 根据商品类型查找商品
+    List<ProductInfo> findByCategoryCode(String categoryCode);
+
     // 查询单个商品
     ProductInfo findById(String productId);
 

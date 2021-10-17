@@ -4,6 +4,9 @@ import com.wangjp.sell.entity.ProductCategory;
 import com.wangjp.sell.repository.ProductCategoryRepository;
 import com.wangjp.sell.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,5 +41,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ProductCategory save(ProductCategory productCategory) {
         return repository.save(productCategory);
+    }
+
+    @Override
+    public void deleteProductCategoryWithIds(List<Integer> ids) {
+        repository.deleteProductCategoryWithIds(ids);
+    }
+
+    @Override
+    public Page<ProductCategory> findAll(Specification<ProductCategory> specification, Pageable pageable) {
+        return repository.findAll(specification, pageable);
     }
 }

@@ -1,6 +1,9 @@
 package com.wangjp.sell.service;
 
 import com.wangjp.sell.entity.ProductCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -23,4 +26,10 @@ public interface CategoryService {
 
     // 保存单个商品类型
     ProductCategory save(ProductCategory productCategory);
+
+    // 删除多个类型
+    void deleteProductCategoryWithIds(List<Integer> ids);
+
+    // 分页查询商品类型
+    Page<ProductCategory> findAll(Specification<ProductCategory> specification, Pageable pageable);
 }

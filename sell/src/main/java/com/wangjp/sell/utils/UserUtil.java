@@ -1,5 +1,6 @@
 package com.wangjp.sell.utils;
 
+import com.wangjp.sell.constant.UserConstant;
 import com.wangjp.sell.vo.UserInfoVO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,5 +30,13 @@ public class UserUtil {
     public static Integer getCurrentUserId() {
         UserInfoVO userInfoVO = getCurrentUserInfoVO();
         return userInfoVO.getId();
+    }
+
+    /**
+     * 判断当前用户是否是管理员
+     */
+    public static Boolean isAdmin() {
+        UserInfoVO userInfoVO = getCurrentUserInfoVO();
+        return userInfoVO.getUsername().equals(UserConstant.adminName);
     }
 }

@@ -1,35 +1,36 @@
 export function toNumber(v) {
-  if (typeof v === 'number') {
+  if (typeof v === 'number' || v === undefined || v === null) {
     return v;
   }
-
-  if (typeof v === 'string') {
-    if (v === '') {
-      return undefined;
-    }
-    if (v.trim() === '') {
-      return false;
-    }
-    if (v.slice(-1) === '.') {
-      return false;
-    }
+  if (v === '') {
+    return undefined;
   }
-
+  if (v && v.trim() === '') {
+    return undefined;
+  }
   return Number(v);
 }
 
 export function toInteger(v) {
-  return parseInt(toNumber(v), 10);
+  const number = toNumber(v);
+  if (number) {
+    return parseInt(number, 10);
+  }
+  return number;
 }
 
 export function toFloat(v, num = 2) {
-  return toNumber(Number(v).toFixed(num));
+  const number = toNumber(v);
+  if (number) {
+    return toNumber(number.toFixed(num));
+  }
+  return number;
 }
 
 export function toOnlyInteger(v) {
   const num = toNumber(v);
   const int = toInteger(v);
-  if ((num || num === 0) && num === int) {
+  if (num === int) {
     return int;
   }
   return false;
