@@ -30,4 +30,4 @@ jwt:
 # 上传地址，需要根据自己环境自行配置
 upload:
   image:
-    path: G:/upload
+    path: /Users/wangjp/sell/upload

@@ -2,7 +2,7 @@
 
 <configuration>
     <!--定义日志文件的存储地址，需要根据自己环境自行配置-->
-    <property name="LOG_HOME" value="G:/" />
+    <property name="LOG_HOME" value="/Users/wangjp/sell/logs" />
 
     <!--配置控制台输出格式-->
     <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
@@ -31,7 +31,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置日志命名模式-->
             <fileNamePattern>
-                ${LOG_HOME}/logs/info.%d.log
+                ${LOG_HOME}/info.%d.log
             </fileNamePattern>
             <!--最多保留30天log-->
             <maxHistory>30</maxHistory>
@@ -54,7 +54,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置日志命名模式-->
             <fileNamePattern>
-                ${LOG_HOME}/logs/error.%d.log
+                ${LOG_HOME}/error.%d.log
             </fileNamePattern>
             <!--最多保留30天log-->
             <maxHistory>30</maxHistory>
