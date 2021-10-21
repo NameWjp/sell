@@ -10,6 +10,7 @@ import com.wangjp.sell.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,11 +49,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductInfo save(ProductInfo productInfo) {
+    public synchronized ProductInfo save(ProductInfo productInfo) {
         return repository.save(productInfo);
     }
 
     @Override
+    @Transactional
     public synchronized void increaseStock(List<CartDTO> cartDTOList) {
         for (CartDTO cartDTO : cartDTOList) {
             ProductInfo productInfo = repository.findById(cartDTO.getProductId()).orElse(null);
@@ -84,5 +86,15 @@ public class ProductServiceImpl implements ProductService {
 
             repository.save(productInfo);
         }
+    }
+
+    @Override
+    public void deleteProductInfoWithIds(List<String> ids) {
+        repository.deleteProductInfoWithIds(ids);
+    }
+
+    @Override
+    public Page<ProductInfo> findAll(Specification<ProductInfo> specification, Pageable pageable) {
+        return repository.findAll(specification, pageable);
     }
 }

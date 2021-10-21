@@ -19,6 +19,8 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
 
     List<ProductCategory> findByCodeIn(List<String> categoryCodeList);
 
+    ProductCategory findByCode(String categoryCode);
+
     @Transactional
     @Modifying
     @Query("delete from ProductCategory where id in ?1")

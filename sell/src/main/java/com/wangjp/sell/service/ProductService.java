@@ -4,6 +4,7 @@ import com.wangjp.sell.dto.CartDTO;
 import com.wangjp.sell.entity.ProductInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -35,4 +36,10 @@ public interface ProductService {
 
     // 减库存
     void decreaseStock(List<CartDTO> cartDTOList);
+
+    // 删除商品
+    void deleteProductInfoWithIds(List<String> ids);
+
+    // 分页查询商品
+    Page<ProductInfo> findAll(Specification<ProductInfo> specification, Pageable pageable);
 }

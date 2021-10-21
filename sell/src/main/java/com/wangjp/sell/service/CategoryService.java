@@ -32,4 +32,6 @@ public interface CategoryService {
 
     // 分页查询商品类型
     Page<ProductCategory> findAll(Specification<ProductCategory> specification, Pageable pageable);
+
+    ProductCategory findByCode(String code);
 }

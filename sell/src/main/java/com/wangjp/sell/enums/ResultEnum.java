@@ -81,7 +81,21 @@ public enum ResultEnum {
 
     CATEGORY_ID_NOT_EMPTY(102, "商品类型id不能为空"),
 
-    CATEGORY_DELETE_EXIST_PRODUCT_INFO(103, "删除的商品类型下存在商品，请先删除商品")
+    CATEGORY_DELETE_EXIST_PRODUCT_INFO(103, "删除的商品类型下存在商品，请先删除商品"),
+
+    CATEGORY_CODE_REPEAT(104, "商品类型编号重复"),
+
+    PRODUCT_INFO_NOT_EXIST(111, "商品不存在"),
+
+    PRODUCT_INFO_ID_NOT_EMPTY(112, "商品id不能为空"),
+
+    COMMON_IMAGE_FORMAT_ERROR(121, "图片格式错误"),
+
+    COMMON_UPLOAD_ROOT_PATH_NOT_FIND(122, "上传根目录未找到"),
+
+    COMMON_IMAGE_SAVE_ERROR(123, "图片保存出错"),
+
+    COMMON_IMAGE_NOT_FIND(124, "未上传任何图片"),
     ;
 
     private Integer code;

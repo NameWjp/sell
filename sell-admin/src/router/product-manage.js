@@ -26,5 +26,24 @@ export default {
         activeMenu: '/product-manage/product-category',
       },
     },
+    {
+      path: 'product-info',
+      name: 'ProductInfo',
+      component: () => import('@/views/product-manage/product-info'),
+      meta: {
+        tagKey: 'ProductInfo',
+        title: '商品管理',
+      },
+    },
+    {
+      path: 'product-info-edit',
+      name: 'ProductInfoEdit',
+      component: () => import('@/views/product-manage/product-info/edit'),
+      meta: {
+        tagKey: 'ProductInfo',
+        title: '商品管理',
+        activeMenu: '/product-manage/product-info',
+      },
+    },
   ],
 };

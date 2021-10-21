@@ -27,6 +27,10 @@ jwt:
     token-header: Authorization
     # jwt 负载前缀
     token-prefix: Bearer
+# 上传地址，需要根据自己环境自行配置
+upload:
+  image:
+    path: G:/upload
 # 自定义的一些配置，用于 spring-security
 custom:
   config:
@@ -35,9 +39,12 @@ custom:
       post:
         - "/auth/login"
         - "/auth/logout"
+        - "/common/**"
       # 需要放行的请求，不限方法
       pattern:
         # swagger 放行
         - "/swagger-ui/**"
         - "/swagger-resources/**"
         - "/v3/**"
+        # 上传图片放行
+        - "/upload/**"

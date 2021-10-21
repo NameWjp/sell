@@ -56,6 +56,11 @@ public class CategoryController {
     @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('category:create')")
     public ResultVO<Object> create(@RequestBody @Validated CategoryForm categoryForm) {
+        ProductCategory oldProductCategory = categoryService.findByCode(categoryForm.getCode());
+        if (oldProductCategory != null) {
+            throw new SellException(ResultEnum.CATEGORY_CODE_REPEAT);
+        }
+
         ProductCategory productCategory = new ProductCategory();
 
         productCategory.setName(categoryForm.getName());
@@ -160,5 +165,11 @@ public class CategoryController {
         Page<ProductCategory> productCategoryPage = categoryService.findAll(specification, pageRequest);
 
         return ResultVOUtil.success(Page2PaginationVOConverter.convert(productCategoryPage));
+    }
+
+    @ApiOperation("获取所有商品类型")
+    @GetMapping("/allList")
+    public ResultVO<List<ProductCategory>> allList() {
+        return ResultVOUtil.success(categoryService.findAll());
     }
 }

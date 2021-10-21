@@ -52,4 +52,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<ProductCategory> findAll(Specification<ProductCategory> specification, Pageable pageable) {
         return repository.findAll(specification, pageable);
     }
+
+    @Override
+    public ProductCategory findByCode(String code) {
+        return repository.findByCode(code);
+    }
 }

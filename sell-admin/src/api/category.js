@@ -24,3 +24,6 @@ export async function getCategoryList(pagination, params) {
   return obj2Pagination(data);
 }
 
+export function getAllCategoryList() {
+  return get('/category/allList');
+}

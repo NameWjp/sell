@@ -22,7 +22,7 @@ export function customUpload(obj) {
     },
   })
     .then((resp) => {
-      if (resp.status === 200) {
+      if (resp.code === 200) {
         const { data: url } = resp;
         onSuccess({
           name: file.name,

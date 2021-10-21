@@ -31,7 +31,9 @@ export default {
     return {
       type: this.$route.query.type,
       id: this.$route.query.id,
-      submitForm: {},
+      submitForm: {
+        sort: 10,
+      },
       submitRules: {
         name: [
           { required: true, message: '名称不能为空' },
