@@ -23,7 +23,11 @@
       <el-table-column type="selection" width="55" />
       <el-table-column type="index" width="50" />
       <el-table-column prop="productName" label="商品名称" />
-      <el-table-column prop="productIcon" label="商品图标" />
+      <el-table-column prop="productIcon" label="商品图标">
+        <template #default="{ row }">
+          <img class="viewBox" :src="row.productIcon">
+        </template>
+      </el-table-column>
       <el-table-column prop="categoryName" label="商品类型" />
       <el-table-column prop="productPrice" label="商品单价(元)" />
       <el-table-column prop="productStatus" label="商品状态">
@@ -123,4 +127,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.viewBox {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
 </style>

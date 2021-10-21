@@ -23,9 +23,8 @@ public class SellApplication extends WebMvcConfigurationSupport {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String[] rootDirList = imageRootPath.split("/");
         String rootDir = rootDirList[rootDirList.length - 1];
-        registry.addResourceHandler("/" + rootDir +"/**").addResourceLocations("file:" + this.imageRootPath);
-        registry.addResourceHandler("/swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/" + rootDir +"/**").addResourceLocations("file:" + this.imageRootPath + "/");
+        registry.addResourceHandler("/swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
         super.addResourceHandlers(registry);
     }
 }
