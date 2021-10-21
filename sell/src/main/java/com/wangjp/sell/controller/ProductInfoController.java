@@ -1,6 +1,7 @@
 package com.wangjp.sell.controller;
 
 import com.wangjp.sell.converter.Page2PaginationVOConverter;
+import com.wangjp.sell.converter.ProductInfo2ProductInfoItemVO;
 import com.wangjp.sell.entity.ProductCategory;
 import com.wangjp.sell.entity.ProductInfo;
 import com.wangjp.sell.enums.ResultEnum;
@@ -12,6 +13,7 @@ import com.wangjp.sell.service.ProductService;
 import com.wangjp.sell.utils.KeyUtil;
 import com.wangjp.sell.utils.ResultVOUtil;
 import com.wangjp.sell.vo.PaginationVO;
+import com.wangjp.sell.vo.ProductInfoItemVO;
 import com.wangjp.sell.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +35,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjp
@@ -131,7 +134,7 @@ public class ProductInfoController {
 
     @ApiOperation("获取商品列表")
     @GetMapping("/list")
-    public ResultVO<PaginationVO<ProductInfo>> list(
+    public ResultVO<PaginationVO<ProductInfoItemVO>> list(
             @RequestParam Integer pageSize,
             @RequestParam Integer pageNum,
             @RequestParam(required = false) String productName,
@@ -157,7 +160,10 @@ public class ProductInfoController {
         };
 
         Page<ProductInfo> productInfoPage = productService.findAll(specification, pageRequest);
+        List<String> categoryCodes = productInfoPage.getContent().stream().map(ProductInfo::getCategoryCode).collect(Collectors.toList());
+        List<ProductCategory> categoryList = categoryService.findByCodeIn(categoryCodes);
+        Page<ProductInfoItemVO> productInfoItemVOPage = productInfoPage.map(productInfo -> ProductInfo2ProductInfoItemVO.convert(productInfo, categoryList));
 
-        return ResultVOUtil.success(Page2PaginationVOConverter.convert(productInfoPage));
+        return ResultVOUtil.success(Page2PaginationVOConverter.convert(productInfoItemVOPage));
     }
 }
